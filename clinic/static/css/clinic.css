@@ -33,7 +33,7 @@ h2 a {
 }
 
 .start-button.patient:hover {
-	background-color: #edfdff;
+	background-color: #f2fdff;
 }
 
 .start-button.doctor {
@@ -41,7 +41,7 @@ h2 a {
 }
 
 .start-button.doctor:hover {
-	background-color: #f0f3ff;
+	background-color: #f5f7ff;
 }
 
 .row.top, .row.footer, .row.self-cert {

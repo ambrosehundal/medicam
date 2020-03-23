@@ -1,10 +1,15 @@
 {% extends "clinic/base.html" %}
 {% load i18n %}
+
 {% block head %}
 <meta http-equiv="refresh" content="30">
 {% endblock %}
 
 {% block content %}
+
+<script>
+  fbq('track', 'CompleteRegistration');
+</script>
 
 <div class="container unverified">
   <div class="row top">
