@@ -119,6 +119,17 @@
         {% endfor %}
       </div>
 
+      <div class="row remarks">
+        <div class="six columns">
+          {{ form.remarks.label_tag }}
+          {{ form.remarks.errors }}
+          {% render_field form.remarks class="u-full-width" %}
+        </div>
+        <div class="six columns">
+          Use this space to tell us about your area of expertise, or for any comments and suggestions.
+        </div>
+      </div>
+
       <div class="row notify" id="notify-row" style="display: none">
         <p>{% trans "We can send a notification to your device if a patient is waiting and no other volunteers are online. This means you can close your web browser and we'll let you know when your help is most needed." %}</p>
         <label for="id_notify">

@@ -15,7 +15,7 @@ class TimeInput(forms.TimeInput):
 class DoctorForm(forms.ModelForm):
 	class Meta:
 		model = Doctor
-		fields = ['name', 'email', 'credentials', 'languages', 'notify', 'notify_interval', 'quiet_time_start', 'quiet_time_end', 'fcm_token', 'self_certification_questions']
+		fields = ['name', 'email', 'credentials', 'languages', 'notify', 'notify_interval', 'quiet_time_start', 'quiet_time_end', 'fcm_token', 'self_certification_questions', 'remarks']
 		widgets = {
 			'languages': CheckboxSelectMultiple(),
 			'notify_interval': TimeDurationWidget(show_days=False, show_minutes=False, show_seconds=False),

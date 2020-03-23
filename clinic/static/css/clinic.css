@@ -167,3 +167,7 @@ ul.errorlist li {
 .faq h6 {
 	font-weight: bold;
 }
+
+.volunteer .row.remarks {
+	margin-top: 20px;
+}

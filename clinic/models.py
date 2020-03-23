@@ -54,6 +54,7 @@ class Doctor(Participant):
 	fcm_token = models.TextField(blank=True, null=True)
 	self_certification_questions = models.ManyToManyField(SelfCertificationQuestion)
 	user_agent = models.TextField(blank=True, null=True)
+	remarks = models.TextField(blank=True, verbose_name=_("anything to add?"))
 
 	def __str__(self):
 		return self.name
