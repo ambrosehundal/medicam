@@ -35,6 +35,7 @@
       document.getElementById('notify-warning').style.display = 'block';
       document.getElementById('id_notify').checked = false;
     }
+    document.getElementById('id_utc_offset').value = (new Date()).getTimezoneOffset();
   });
 </script>
 {% endblock %}
@@ -155,6 +156,7 @@
           </div>
         </div>
         {{ form.fcm_token.as_hidden }}
+        {{ form.utc_offset.as_hidden }}
       </div>
 
       <input class="button-primary" id="submit-button" type="submit" value="{% trans "Continue" %}">

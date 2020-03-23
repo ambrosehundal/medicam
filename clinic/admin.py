@@ -4,7 +4,7 @@ from clinic.models import Doctor, Language, SelfCertificationQuestion
 class DoctorAdmin(admin.ModelAdmin):
 	list_display=('name', 'verified', 'get_languages', 'in_session')
 	list_filter=('verified', 'languages')
-	readonly_fields=('credentials', 'languages', 'last_online', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent', 'fcm_token')
+	readonly_fields=('credentials', 'languages', 'utc_offset', 'last_online', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent', 'fcm_token')
 
 	def get_languages(self, obj):
 		return ", ".join([l.name for l in obj.languages.all()])

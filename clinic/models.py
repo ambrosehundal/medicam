@@ -55,6 +55,7 @@ class Doctor(Participant):
 	self_certification_questions = models.ManyToManyField(SelfCertificationQuestion)
 	user_agent = models.TextField(blank=True, null=True)
 	remarks = models.TextField(blank=True, verbose_name=_("anything to add?"))
+	utc_offset = models.IntegerField(default=0)
 
 	def __str__(self):
 		return self.name
