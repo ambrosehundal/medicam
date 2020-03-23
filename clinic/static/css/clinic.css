@@ -1,3 +1,7 @@
+a {
+	color: #0692bd;
+}
+
 h2 a {
 	text-decoration: none;
 	color: black;
@@ -25,19 +29,19 @@ h2 a {
 }
 
 .start-button.patient {
-	border: 5px solid #88d9e6;
+	border: 5px solid #2cbce8;
 }
 
 .start-button.patient:hover {
-	background-color: #e0f8fc;
+	background-color: #edfdff;
 }
 
 .start-button.doctor {
-	border: 5px solid #8b8bae;
+	border: 5px solid #6767c7;
 }
 
 .start-button.doctor:hover {
-	background-color: #ededfc;
+	background-color: #f0f3ff;
 }
 
 .row.top, .row.footer, .row.self-cert {
@@ -157,6 +161,7 @@ ul.errorlist li {
 
 .wait-time.long {
 	color: #c41200;
+	font-weight: bold;
 }
 
 .faq h6 {

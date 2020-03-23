@@ -53,6 +53,7 @@ class Doctor(Participant):
 	quiet_time_end = models.TimeField(blank=True, null=True, verbose_name=_("end of quiet hours"))
 	fcm_token = models.TextField(blank=True, null=True)
 	self_certification_questions = models.ManyToManyField(SelfCertificationQuestion)
+	user_agent = models.TextField(blank=True, null=True)
 
 	def __str__(self):
 		return self.name

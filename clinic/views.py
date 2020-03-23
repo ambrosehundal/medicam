@@ -24,6 +24,7 @@ def volunteer(request):
 		if form.is_valid():
 			doctor = form.save(commit=False)
 			doctor.ip_address = get_client_ip(request)[0]
+			doctor.user_agent = request.META.get('HTTP_USER_AGENT')
 			doctor.save()
 			form.save_m2m()
 			response = redirect('consultation')
