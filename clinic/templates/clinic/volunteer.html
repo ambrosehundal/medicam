@@ -46,10 +46,9 @@
   <div class="row top">
     <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
     <h4>{% trans "Volunteer for consultations" %}</h4>
-    <p>{% trans "Please complete this form" %}.</p>
+    <p>{% trans "Please complete this form." %}</p>
     <p>
-      <b>{% trans "We aim to verify your credentials within 24 hours." %}</b>
-      <p>{% trans "Your verification status will be saved on this device, so you can return to the site at any time to receive video calls." %}</p>
+      {% trans "We will verify your credentials as soon as possible. Your verification status will be saved on this device, so you can return to the site at any time to receive video calls." %}
     </p>
 
     <div id="notify-warning" style="display: none">
