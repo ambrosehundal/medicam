@@ -30,12 +30,11 @@
   <div class="row intro">
     <div class="seven columns">
       <p>
-        {% trans "This website is an online Coronavirus clinic." %}
-        {% trans "Video chat live with volunteer medics who can answer your questions." %}
+        {% trans "This website is a place to get help with Coronavirus if you don't have access to a doctor." %}
+        {% trans "Video chat with volunteer medics who can answer your questions." %}
       </p>
-      <p>
-        <a href="{% url 'faq' %}">Find answers for frequently asked questions about COVID-19.</a>
-      </p>
+      <p><a href="{% url 'faq' %}">Find answers for frequently asked questions about COVID-19.</a></p>
+      <p><a href="{% url 'doctor_landing' %}">See how it works for volunteers.</a></p>
     </div>
     <div class="five columns stock-photo">
       <img src="{% static 'images/telemedicine.png' %}" width="250">

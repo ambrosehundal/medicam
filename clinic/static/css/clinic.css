@@ -15,7 +15,7 @@ h2 a {
 
 .start-buttons a {
 	text-decoration: none;
-	color: #374b4a;
+	color: #222;
 }
 
 .start-button {
@@ -170,4 +170,52 @@ ul.errorlist li {
 
 .volunteer .row.remarks {
 	margin-top: 20px;
+}
+
+.intro .row.top img {
+	margin: 0 0 20px 20px;
+}
+
+@media (min-width: 500px) {
+	.intro .row.top img {
+		width: 300px;
+	}
+
+	.intro .how-it-works {
+		display: flex;
+	}
+
+	.intro .how-it-works .columns {
+		flex: 1;
+	}
+}
+
+.intro .how-it-works {
+	margin-bottom: 15px;
+}
+
+.intro .how-it-works h5 {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.intro .how-it-works a.block {
+	text-decoration: none;
+	color: #222;
+}
+
+.intro .how-it-works big {
+	display: block;
+	margin-bottom: 15px;
+}
+
+.intro .how-it-works p {
+	margin-bottom: 5px;
+}
+
+.intro .how-it-works .columns {
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 3px solid #6767c7;
+	border-radius: 5px;
 }

@@ -49,11 +49,11 @@
     <p>{% trans "Please complete this form" %}.</p>
     <p>
       <b>{% trans "We aim to verify your credentials within 24 hours." %}</b>
-      {% trans "After verification, you will be available for video chat sessions. Your verification status will be saved on this device, so you can return to the site at any time to accept calls." %}
+      <p>{% trans "Your verification status will be saved on this device, so you can return to the site at any time to receive video calls." %}</p>
     </p>
 
     <div id="notify-warning" style="display: none">
-      &#x26A0;&#xFE0F; {% trans "Your web browser doesn't support push notifications. If you want to be notified when patients are waiting, please use Chrome, Firefox, or Edge." %}
+      &#x26A0;&#xFE0F; {% trans "Your web browser doesn't support push notifications. If you want to be notified when people are waiting, please use Chrome, Firefox, or Edge." %}
     </div>
 
     <form id="volunteer-form" action="{% url 'volunteer' %}" method="post" enctype="multipart/form-data" onsubmit="return submitVolunteerForm()">
@@ -132,7 +132,7 @@
       </div>
 
       <div class="row notify" id="notify-row" style="display: none">
-        <p>{% trans "We can send a notification to your device if a patient is waiting and no other volunteers are online. This means you can close your web browser and we'll let you know when your help is most needed." %}</p>
+        <p>{% trans "We can send a notification to your device if someone is waiting and no other volunteers are online. This means you can close your web browser and we'll let you know when your help is most needed." %}</p>
         <label for="id_notify">
           <input type="checkbox" id="id_notify" name="notify" onchange="document.getElementById('notify-options').style.display = this.checked ? 'block' : 'none'"{% if form.notify.value %} checked{% endif %}>
           <span class="label-body">{% trans "Notify me when I'm needed" %}</span>
