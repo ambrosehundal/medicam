@@ -19,7 +19,7 @@
     <div class="u-pull-right">
       <form action="{% url 'finish' %}" method="post">
         {% csrf_token %}
-        <input class="button" type="submit" value="{% trans "Finish" %}">
+        <input class="button" type="submit" value="{% trans "End Session" %}">
       </form>
     </div>
     <span>{% trans "In session with" %} <b>{{ doctor.name }}</b> &bull;</span>
