@@ -1,12 +1,19 @@
-from clinic.forms import DoctorForm
-from clinic.models import Doctor, Language, Patient, SelfCertificationQuestion
-from datetime import datetime, timedelta
 from django.conf import settings
 from django.db import transaction
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.utils.translation import gettext as _
+from django.views.decorators.http import require_http_methods
+
+from clinic.forms import DoctorForm
+from clinic.models import ChatMessage, Doctor, Language, Patient, SelfCertificationQuestion
+
 from ipware import get_client_ip
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
+
+from datetime import datetime, timedelta
+import json
 
 SIX_MONTHS = 15552000
 ONE_MONTH = 2629800
@@ -93,9 +100,9 @@ def consultation_doctor(request, doctor):
 		if patient:
 			patient.doctor = doctor
 			patient.session_started = datetime.now()
-			patient.twilio_jwt = get_twilio_jwt(identity=str(patient.uuid), room=str(doctor.uuid))
+			patient.twilio_jwt = get_twilio_jwt(identity=str(patient.uuid), room=str(patient.uuid))
 			patient.save()
-			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.uuid), room=str(doctor.uuid))
+			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.id), room=str(patient.uuid))
 			doctor.save()
 			return redirect('consultation')
 		else:
@@ -104,7 +111,7 @@ def consultation_doctor(request, doctor):
 	return render(request, 'clinic/session_doctor.html', context={
 		'video_data': {
 			'token': doctor.twilio_jwt,
-			'room': str(doctor.uuid),
+			'room': str(doctor.patient.uuid),
 			'enable_local_video': True,
 		},
 	})
@@ -117,7 +124,7 @@ def consultation_patient(request, patient):
 			'doctor': patient.doctor,
 			'video_data': {
 				'token': patient.twilio_jwt,
-				'room': str(patient.doctor.uuid),
+				'room': str(patient.uuid),
 				'enable_local_video': patient.enable_video,
 			},
 		})
@@ -150,3 +157,47 @@ def finish(request):
 			pass
 
 	return response
+
+@require_http_methods(['GET', 'POST'])
+def chat(request):
+	patient_id = request.COOKIES.get('patient_id')
+	doctor_id = request.COOKIES.get('doctor_id')
+
+	if patient_id:
+		patient = Patient(uuid=patient_id)
+	elif doctor_id:
+		try:
+			patient = Patient.objects.only('uuid').get(doctor__uuid=doctor_id, session_started__isnull=False, session_ended__isnull=True)
+		except Patient.DoesNotExist:
+			return HttpResponseBadRequest("no active session")
+	else:
+		return HttpResponseBadRequest("patient_id or doctor_id required")
+
+	if request.method == 'POST':
+		return chat_post(request, patient.uuid, doctor_id)
+
+	messages = []
+	for msg in ChatMessage.objects.order_by('sent').filter(patient__uuid=patient.uuid):
+		if (msg.doctor and doctor_id) or (not msg.doctor and patient_id):
+			name = _("You")
+		elif msg.doctor:
+			name = msg.doctor.name 
+		else:
+			name = _("Visitor")
+
+		messages.append({
+			'uuid': msg.uuid,
+			'name': name,
+			'time': msg.sent.timestamp() * 1000, # JS uses milliseconds
+			'text': msg.text,
+		})
+
+	return JsonResponse({'messages': messages})
+
+def chat_post(request, patient_id, doctor_id):
+	json_data = json.loads(request.body.decode('utf-8'))
+	msg = ChatMessage(patient_id=patient_id, uuid=json_data.get('uuid'), text=json_data.get('text'))
+	if doctor_id:
+		msg.doctor_id = doctor_id
+	msg.save()
+	return HttpResponse(status=200)

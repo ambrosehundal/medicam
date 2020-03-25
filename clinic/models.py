@@ -78,7 +78,23 @@ class Patient(Participant):
 	session_ended = models.DateTimeField(blank=True, null=True)
 	notes = models.TextField(blank=True)
 	enable_video = models.BooleanField()
+	text_only = models.BooleanField(default=False)
 
 	@property
 	def in_session(self):
 		return hasattr(self, 'doctor') and self.session_started and not self.session_ended
+
+class Report(models.Model):
+	by_doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
+	by_patient = models.ForeignKey(Patient, models.PROTECT, blank=True, null=True)
+	against_patient = models.ForeignKey(Patient, models.PROTECT, blank=True, null=True, related_name='reported_by')
+	reason = models.TextField(blank=True)
+	timestamp = models.DateTimeField(auto_now_add=True)
+
+class ChatMessage(models.Model):
+	uuid = models.UUIDField(unique=True, editable=False)
+	doctor = models.ForeignKey(Doctor, models.CASCADE, blank=True, null=True, to_field='uuid')
+	patient = models.ForeignKey(Patient, models.CASCADE, blank=True, null=True, to_field='uuid')
+	text = models.TextField()
+	sent = models.DateTimeField(auto_now_add=True)
+	read = models.DateTimeField(blank=True, null=True)

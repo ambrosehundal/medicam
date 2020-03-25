@@ -13,4 +13,5 @@ urlpatterns = [
     path('terms/', TemplateView.as_view(template_name='clinic/terms.html'), name='terms'),
     path('faq/', TemplateView.as_view(template_name='clinic/faq.html'), name='faq'),
     path('volunteer-faq/', TemplateView.as_view(template_name='clinic/landing_doctor.html'), name='landing_doctor'),
+    path('chat/', views.chat, name='chat'),
 ]

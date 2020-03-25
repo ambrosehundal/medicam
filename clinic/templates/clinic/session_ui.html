@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="eight columns video">
+    <div class="media-container">
+      <div id="remote-media"></div>
+      <div id="local-media"></div>
+    </div>
+  </div>
+  <div class="four columns chat">
+    <ol id="chat-messages"></ol>
+    <form action="#" onsubmit="sendChatMessage(); return false" autocomplete="off">
+      {% csrf_token %}
+      <input id="send-message" type="text" class="u-full-width" placeholder="Send chat message">
+      <input class="button" type="submit" value="Send">
+    </form>
+  </div>
+</div>

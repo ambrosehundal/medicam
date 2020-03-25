@@ -99,6 +99,7 @@ ul.errorlist li {
 
 .media-container {
 	position: relative;
+	margin-bottom: 15px;
 }
 
 .session #local-media {
@@ -112,7 +113,6 @@ ul.errorlist li {
 }
 
 #remote-media * {
-	position: absolute;
 	top: 0;
 	left: 0;
 	max-width: 100%;
@@ -218,4 +218,37 @@ ul.errorlist li {
 	padding: 10px;
 	border: 3px solid #6767c7;
 	border-radius: 5px;
+}
+
+div.chat ol {
+	width: 100%;
+	max-height: 350px;
+	overflow-y: scroll;
+	list-style-type: none;
+	margin: 0;
+}
+
+@media (max-width: 500px) {
+	div.chat ol {
+		max-height: 150px;
+	}
+}
+
+div.chat li {
+	margin-bottom: 15px;
+}
+
+div.chat li .name {
+	font-size: .9em;
+	font-weight: bold;
+	padding-right: 10px;
+}
+
+div.chat li .time {
+	font-size: .8em;
+	color: #777;
+}
+
+div.chat li .text {
+
 }

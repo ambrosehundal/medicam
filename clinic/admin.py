@@ -1,5 +1,5 @@
 from django.contrib import admin
-from clinic.models import Doctor, Language, SelfCertificationQuestion
+from clinic.models import Doctor, Language, Report, SelfCertificationQuestion
 
 class DoctorAdmin(admin.ModelAdmin):
 	list_display=('name', 'verified', 'get_languages', 'in_session')
@@ -12,4 +12,5 @@ class DoctorAdmin(admin.ModelAdmin):
 
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Language)
+admin.site.register(Report)
 admin.site.register(SelfCertificationQuestion)
