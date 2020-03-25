@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="row">
   <div class="eight columns video">
     <div class="media-container">
@@ -9,8 +11,8 @@
     <ol id="chat-messages"></ol>
     <form action="#" onsubmit="sendChatMessage(); return false" autocomplete="off">
       {% csrf_token %}
-      <input id="send-message" type="text" class="u-full-width" placeholder="Send chat message">
-      <input class="button" type="submit" value="Send">
+      <input id="send-message" type="text" class="u-full-width" placeholder="{% trans "Send a message" %}">
+      <input class="button" type="submit" value="{% trans "Send" %}">
     </form>
   </div>
 </div>
