@@ -1,0 +1,76 @@
+{% extends "clinic/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Coronavirus telehealth platform" %}{% endblock %}
+
+{% block banner %}{% endblock %}
+
+{% block content %}
+
+<div class="container intro org">
+  <div class="row top">
+    <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
+    <img src="{% static 'images/telemedicine2.jpg' %}" width="200" class="u-pull-right">
+    <h5>{% trans "Coronavirus telehealth platform" %}</h5>
+    <p><a href="{% url 'index' %}">{% trans "doc19.org" %}</a> {% trans "was created to connect people with volunteers around the world, but this technology is also available for free to clinics, hospitals and other healthcare organizations serving uninsured and vulnerable groups." %}</p>
+    <p>{% trans "The platform gives you a custom URL (e.g. <code>myclinic.platform.doc19.org</code>) that your patients can use to connect to your approved providers. Patients and providers can use their own phone or computer from the safety of their own homes." %}</p>
+  </div>
+
+  <div class="row">
+    <h5>How it works:</h5>
+  </div>
+
+  <div class="row how-it-works">
+    <div class="four columns">
+      <img src="{% static 'images/wait.png' %}" width="100" class="u-pull-right">
+      <h5>{% trans "Sign Up" %}</h5>
+      <big>{% trans "Create an account with a few basic details." %}</big>
+      <p>{% trans "We will set up an admin site where your staff can enroll providers and see statistics." %}</p>
+    </div>
+    <div class="four columns">
+      <img src="{% static 'images/volunteer.png' %}" width="110" class="u-pull-right">
+      <h5>{% trans "Enroll" %}</h5>
+      <big>{% trans "Get an access link for each provider." %}</big>
+      <p>{% trans "Just enter their names and select their language(s)." %}</p>
+      <p>{% trans "When a provider clicks their link, they're ready to receive calls." %}</p>
+    </div>
+    <div class="four columns">
+      <img src="{% static 'images/telemedicine.png' %}" width="120" class="u-pull-right">
+      <h5>{% trans "Triage" %}</h5>
+      <big>{% trans "Direct callers to the appropriate resources." %}</big>
+      <p>{% trans "By giving callers a way to get answers without leaving their homes, together we can &ldquo;flatten the curve.&rdquo;" %}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <h5>Benefits</h5>
+    <ul>
+      <li>Our technology works on most devices without any need to install an app.</li>
+      <li>Secure and encrypted video calls, powered by Twilio.</li>
+      <li>Fully open source, unlike any other crisis-focused telehealth platform.</li>
+      <li>No cost to organizations or providers &mdash; our donors pick up the tab.</li>
+      <li>Use your existing systems. Get providers online just by sending them a link.</li>
+    </ul>
+  </div>
+
+  <div class="row register">
+    <h5>{% trans "Get started now" %}</h5>
+    <p>{% trans "Try the platform for as long as you want and see if it's right for your organization. We'll get you set up to enroll providers within 24 hours." %}</p>
+    <p><b>{% trans "Start here:" %} <a href="{% url 'social:begin' 'google' %}?next={% url 'submit_org' %}">{% trans "Sign in with Google" %}</a></b></p>
+  </div>
+
+  <div class="row more-info">
+    <h5>{% trans "Need more information?" %}</h5>
+    <p>{% trans "This service just launched, and we're working around the clock to make improvements. If you'd like more information, please reach out to" %} <a href="mailto:contact@doc19.org">contact@doc19.org</a>.</p>
+  </div>
+
+  <div class="row footer">
+    <div class="twelve columns terms">
+    <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> &bull;
+    <a href="{% url 'terms' %}">{% trans "Terms of Use" %}</a>
+    </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -13,5 +13,7 @@ urlpatterns = [
     path('terms/', TemplateView.as_view(template_name='clinic/terms.html'), name='terms'),
     path('faq/', TemplateView.as_view(template_name='clinic/faq.html'), name='faq'),
     path('volunteer-faq/', TemplateView.as_view(template_name='clinic/landing_doctor.html'), name='landing_doctor'),
+    path('for-organizations/', TemplateView.as_view(template_name='clinic/landing_org.html'), name='landing_org'),
+    path('org-request/', views.submit_org, name='submit_org'),
     path('chat/', views.chat, name='chat'),
 ]

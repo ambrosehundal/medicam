@@ -13,7 +13,9 @@ from durationwidget.widgets import TimeDurationWidget
 class TimeInput(forms.TimeInput):
 	input_type = 'time'
 
-class DoctorForm(forms.ModelForm):
+class VolunteerForm(forms.ModelForm):
+	credentials = forms.FileField(required=True)
+
 	class Meta:
 		model = Doctor
 		fields = ['name', 'email', 'credentials', 'languages', 'notify', 'notify_interval', 'quiet_time_start', 'quiet_time_end', 'utc_offset', 'fcm_token', 'self_certification_questions', 'remarks']
@@ -50,3 +52,10 @@ class FeedbackForm(forms.ModelForm):
 	class Meta:
 		model = Patient
 		fields = ['feedback_response', 'feedback_text']
+
+class OrgRequestForm(forms.Form):
+	org_name = forms.CharField(label=_("Name of organization"))
+	owner_name = forms.CharField(label=_("Your name"))
+	position = forms.CharField(label=_("Your position/title"))
+	email = forms.EmailField()
+	comments = forms.CharField(widget=forms.Textarea(), required=False)

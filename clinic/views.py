@@ -2,14 +2,17 @@ from datetime import datetime, timedelta
 import json
 
 from django.conf import settings
+from django.core.mail import mail_admins
+from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
-from clinic.forms import DoctorForm, FeedbackForm
-from clinic.models import ChatMessage, Doctor, Language, Patient, SelfCertificationQuestion
+from clinic.forms import FeedbackForm, OrgRequestForm, VolunteerForm
+from clinic.models import ChatMessage, Disclaimer, Doctor, Language, Patient, SelfCertificationQuestion
 
 from ipware import get_client_ip
 from twilio.jwt.access_token import AccessToken
@@ -27,18 +30,19 @@ def index(request):
 
 def volunteer(request):
 	if request.method == 'POST':
-		form = DoctorForm(request.POST, request.FILES)
+		form = VolunteerForm(request.POST, request.FILES)
 		if form.is_valid():
 			doctor = form.save(commit=False)
 			doctor.ip_address = get_client_ip(request)[0]
 			doctor.user_agent = request.META.get('HTTP_USER_AGENT')
+			doctor.site = get_current_site(request)
 			doctor.save()
 			form.save_m2m()
 			response = redirect('consultation')
 			response.set_cookie('doctor_id', doctor.uuid, max_age=SIX_MONTHS)
 			return response
 	else:
-		form = DoctorForm()
+		form = VolunteerForm()
 		form.fields['self_certification_questions'].queryset = SelfCertificationQuestion.objects.filter(language=request.LANGUAGE_CODE)
 
 	return render(request, 'clinic/volunteer.html', {'form': form})
@@ -48,18 +52,28 @@ def disclaimer(request):
 	if patient_id:
 		return redirect('consultation')
 
+	site = get_current_site(request)
+
 	if request.method == 'POST':
 		lang = Language.objects.get(ietf_tag=request.LANGUAGE_CODE)
 		video = request.POST.get('video') == '1'
 		patient = Patient(ip_address=get_client_ip(request)[0], language=lang, enable_video=video)
+		patient.site = site
 		patient.save()
 		response = redirect('consultation')
 		response.set_cookie('patient_id', patient.uuid, max_age=ONE_MONTH)
 		return response
 	else:
-		return render(request, 'clinic/disclaimer.html')
+		obj = Disclaimer.objects.filter(site=site).first()
+		return render(request, 'clinic/disclaimer.html', {'disclaimer': obj})
 
 def consultation(request):
+	provider_id = request.GET.get('provider_id')
+	if provider_id:
+		response = redirect('consultation')
+		response.set_cookie('doctor_id', provider_id, max_age=SIX_MONTHS)
+		return response
+
 	doctor_id = request.COOKIES.get('doctor_id')
 	if doctor_id:
 		try:
@@ -96,7 +110,7 @@ def consultation_doctor(request, doctor):
 	doctor.save()
 
 	if not doctor.patient:
-		patient = Patient.objects.order_by('id').filter(language__in=doctor.languages.all(), session_started__isnull=True).first()
+		patient = Patient.objects.order_by('id').filter(site=doctor.site, language__in=doctor.languages.all(), session_started__isnull=True).first()
 		if patient:
 			patient.doctor = doctor
 			patient.session_started = datetime.now()
@@ -208,3 +222,15 @@ def chat_post(request, patient_id, doctor_id):
 		msg.doctor_id = doctor_id
 	msg.save()
 	return HttpResponse(status=200)
+
+@login_required
+def submit_org(request):
+	if request.method == 'POST':
+		form = OrgRequestForm(request.POST)
+		if form.is_valid():
+			form.cleaned_data['username'] = request.user.get_username()
+			mail_admins("Organization request", str(form.cleaned_data))
+	else:
+		form = OrgRequestForm()
+
+	return render(request, 'clinic/submit_org.html', {'form': form})

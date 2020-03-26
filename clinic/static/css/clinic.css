@@ -249,6 +249,14 @@ div.chat li .time {
 	color: #777;
 }
 
-div.chat li .text {
+.submit-org input[type="text"], .submit-org input[type="email"], .submit-org textarea {
+	width: 100%;
+}
 
+.disclaimer form {
+	margin-top: 20px;
+}
+
+.disclaimer .button-primary {
+	margin-top: 10px;
 }

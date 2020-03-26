@@ -1,3 +1,4 @@
+from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -10,6 +11,7 @@ class Participant(models.Model):
 	last_updated = models.DateTimeField(auto_now=True)
 	ip_address = models.GenericIPAddressField()
 	twilio_jwt = models.TextField(blank=True, null=True, editable=False)
+	site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
 	class Meta:
  		abstract = True
@@ -37,12 +39,12 @@ class SelfCertificationQuestion(models.Model):
 
 def upload_filename(instance, filename):
 	ext = os.path.splitext(filename)[-1].lower()
-	return 'credentials/{}.{}'.format(instance.uuid, ext)
+	return 'credentials/{}{}'.format(instance.uuid, ext)
 
 class Doctor(Participant):
 	name = models.CharField(max_length=70)
 	email = models.EmailField(blank=True, null=True)
-	credentials = models.FileField(upload_to=upload_filename)
+	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
 	verified = models.BooleanField(default=False)
 	languages = models.ManyToManyField(Language)
 	last_online = models.DateTimeField(blank=True, null=True)
@@ -52,10 +54,13 @@ class Doctor(Participant):
 	quiet_time_start = models.TimeField(blank=True, null=True, verbose_name=_("start of quiet hours"))
 	quiet_time_end = models.TimeField(blank=True, null=True, verbose_name=_("end of quiet hours"))
 	fcm_token = models.TextField(blank=True, null=True)
-	self_certification_questions = models.ManyToManyField(SelfCertificationQuestion)
+	self_certification_questions = models.ManyToManyField(SelfCertificationQuestion, blank=True)
 	user_agent = models.TextField(blank=True, null=True)
 	remarks = models.TextField(blank=True, verbose_name=_("anything to add?"))
 	utc_offset = models.IntegerField(default=0)
+
+	class Meta:
+		verbose_name = "provider"
 
 	def __str__(self):
 		return self.name
@@ -106,3 +111,10 @@ class ChatMessage(models.Model):
 	text = models.TextField()
 	sent = models.DateTimeField(auto_now_add=True)
 	read = models.DateTimeField(blank=True, null=True)
+
+class Disclaimer(models.Model):
+	site = models.ForeignKey(Site, on_delete=models.CASCADE)
+	html = models.TextField()
+
+	def __str__(self):
+		return str(self.site)

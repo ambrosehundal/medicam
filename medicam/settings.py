@@ -33,7 +33,7 @@ GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS')
 if (DEBUG or GITHUB_ACTIONS) and not SECRET_KEY:
     SECRET_KEY = 'x'
 
-ALLOWED_HOSTS = ['localhost', '192.168.1.30', 'doc19.org']
+ALLOWED_HOSTS = ['localhost', '192.168.1.30', 'doc19.org', '.platform.doc19.org']
 
 
 # Application definition
@@ -45,11 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
 
     # dependencies
     'durationwidget',
     'widget_tweaks',
+    'social_django',
 
     # apps
     'clinic',
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'medicam.urls'
@@ -112,6 +115,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOpenId',
 ]
 
 
@@ -180,3 +188,17 @@ LOGGING = {
         },
     },
 }
+
+
+# Email
+
+ADMINS = [
+    ('Greg Hughes', 'contact@doc19.org'),
+]
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True)
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False)

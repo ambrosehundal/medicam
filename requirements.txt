@@ -6,5 +6,6 @@ django-storages
 django-widget-tweaks
 gunicorn
 psycopg2
+social-auth-app-django
 twilio
 whitenoise

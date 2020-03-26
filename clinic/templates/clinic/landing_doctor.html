@@ -1,58 +1,59 @@
 {% extends "clinic/base.html" %}
 {% load i18n static %}
 
+{% block banner %}{% endblock %}
+
 {% block content %}
 
 <div class="container intro doctor">
-    <div class="row top">
-        <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
-        <img src="{% static 'images/telemedicine2.jpg' %}" width="200" class="u-pull-right">
-        <h5>{% trans "We need you!" %}</h5>
-        <p><a href="{% url 'index' %}">{% trans "doc19.org" %}</a> {% trans "is a" %} <b>{% trans "free telehealth service" %}</b> {% trans "created to help with the COVID-19 pandemic. Anyone across the world with questions about Coronavirus can use this site to get help over video chat." %}</p>
-        <p><big>{% trans "We're seeking volunteer healthcare professionals, students, and retirees to take video calls." %}</big></p>
-    </div>
+  <div class="row top">
+    <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
+    <img src="{% static 'images/telemedicine2.jpg' %}" width="200" class="u-pull-right">
+    <h5>{% trans "We need you!" %}</h5>
+    <p><a href="{% url 'index' %}">{% trans "doc19.org" %}</a> {% trans "is a" %} <b>{% trans "free telehealth service" %}</b> {% trans "created to help with the COVID-19 pandemic. Anyone across the world with questions about Coronavirus can use this site to get help over video chat." %}</p>
+    <p><big>{% trans "We're seeking volunteer healthcare professionals, students, and retirees to take video calls." %}</big></p>
+  </div>
 
-    <div class="row">
-        <h5>How it works:</h5>
-    </div>
+  <div class="row">
+    <h5>How it works:</h5>
+  </div>
 
-    <div class="row how-it-works">
-        <div class="four columns">
-            <img src="{% static 'images/volunteer.png' %}" width="100" class="u-pull-right">
-            <a href="{% url 'volunteer' %}" class="block">
-                <h5>{% trans "Volunteer" %}</h5>
-                <big>{% trans "Registration takes 2 minutes." %}</big>
-                <p>{% trans "We made it easy to sign up." %}</p>
-            </a>
-            <p><a href="{% url 'volunteer' %}"><b>Click here to get started</b></a></p>
-        </div>
-        <div class="four columns">
-            <img src="{% static 'images/wait.png' %}" width="110" class="u-pull-right">
-            <h5>{% trans "Wait" %}</h5>
-            <big>{% trans "Come back to the site when someone is waiting for help." %}</big>
-            <p>{% trans "We can send you a notification when a call is waiting." %}</p>
-            <p>{% trans "You choose the frequency and timing of notifications." %}</p>
-        </div>
-        <div class="four columns">
-            <img src="{% static 'images/telemedicine.png' %}" width="120" class="u-pull-right">
-            <h5>{% trans "Triage" %}</h5>
-            <big>{% trans "Help direct callers to the appropriate resources." %}</big>
-            <p>{% trans "By giving callers a way to get answers without leaving their homes, you're directly helping to &ldquo;flatten the curve.&rdquo;" %}</p>
-        </div>
+  <div class="row how-it-works">
+    <div class="four columns">
+      <img src="{% static 'images/volunteer.png' %}" width="100" class="u-pull-right">
+      <a href="{% url 'volunteer' %}" class="block">
+        <h5>{% trans "Volunteer" %}</h5>
+        <big>{% trans "Registration takes 2 minutes." %}</big>
+        <p>{% trans "We made it easy to sign up." %}</p>
+      </a>
+      <p><a href="{% url 'volunteer' %}"><b>Click here to get started</b></a></p>
     </div>
+    <div class="four columns">
+      <img src="{% static 'images/wait.png' %}" width="110" class="u-pull-right">
+      <h5>{% trans "Wait" %}</h5>
+      <big>{% trans "Come back to the site when someone is waiting for help." %}</big>
+      <p>{% trans "We can send you a notification when a call is waiting." %}</p>
+      <p>{% trans "You choose the frequency and timing of notifications." %}</p>
+    </div>
+    <div class="four columns">
+      <img src="{% static 'images/telemedicine.png' %}" width="120" class="u-pull-right">
+      <h5>{% trans "Triage" %}</h5>
+      <big>{% trans "Help direct callers to the appropriate resources." %}</big>
+      <p>{% trans "By giving callers a way to get answers without leaving their homes, you're directly helping to &ldquo;flatten the curve.&rdquo;" %}</p>
+    </div>
+  </div>
 
-    <div class="row more-info">
-        <h5>Need more information?</h5>
-        <p>This website is still very new, and we're working around the clock to get up and running.</p>
-        <p>If you'd like more information, reach out to <a href="mailto:contact@doc19.org">contact@doc19.org</a>.
-    </div>
+  <div class="row more-info">
+    <h5>{% trans "Need more information?" %}</h5>
+    <p>{% trans "This website is still very new, and we're working around the clock to get up and running. If you'd like more information, reach out to" %} <a href="mailto:contact@doc19.org">contact@doc19.org</a>.</p>
+  </div>
 
-    <div class="row footer">
-      <div class="twelve columns terms">
-        <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> &bull;
-        <a href="{% url 'terms' %}">{% trans "Terms of Use" %}</a>
-      </div>
+  <div class="row footer">
+    <div class="twelve columns terms">
+    <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> &bull;
+    <a href="{% url 'terms' %}">{% trans "Terms of Use" %}</a>
     </div>
+  </div>
   </div>
 </div>
 

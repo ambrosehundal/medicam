@@ -12,5 +12,9 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('clinic/', include('clinic.urls')),
     path('firebase-messaging-sw.js', ServiceWorkerView.as_view()),
+    path('', include('social_django.urls', namespace='social')),
     path('', RedirectView.as_view(url='/clinic/')),
 ]
+
+admin.site.site_header = "Medicam administration"
+admin.site.site_title = "Medicam admin"
