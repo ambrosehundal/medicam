@@ -1,4 +1,6 @@
 {% extends "clinic/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
 <div class="container disclaimer">
@@ -6,7 +8,6 @@
     <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
     <h4>{% trans "Privacy Policy" %}</h4>
     <div>
-      <div>Privacy Policy</div>
       <div>Your Information. Your Rights. Our Responsibilities.</div>
       <p>Fam Computer LLC values the privacy rights of its website users. This notice describes how information about you may be used and disclosed by Fam Computer LLC and its affiliated groups and how you can get access to this information. <b>Please review it carefully.</b></p>
       <div>Summary</div>
