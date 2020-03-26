@@ -1,6 +1,8 @@
 {% extends "clinic/base.html" %}
 {% load i18n static %}
 
+{% block title %}{% trans "In session" %}{% endblock %}
+
 {% block head %}
 <script src="//media.twiliocdn.com/sdk/js/video/releases/2.0.0/twilio-video.min.js"></script>
 <script src="{% static 'js/video.js' %}"></script>
