@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 from clinic.models import Disclaimer, Doctor, Language, Report, SelfCertificationQuestion
 
@@ -24,7 +25,10 @@ class DoctorAdmin(SiteAdmin):
 		return bool(obj.fcm_token)
 
 	def access_url(self, obj):
-		return reverse('consultation') + '?provider_id=' + str(obj.uuid)
+		if obj.pk:
+			return reverse('consultation') + '?provider_id=' + str(obj.uuid)
+		else:
+			return _("(will be generated when provider is added)")
 	access_url.short_description = "Access URL"
 
 	def get_list_filter(self, request):
