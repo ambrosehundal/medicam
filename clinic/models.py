@@ -45,7 +45,7 @@ class Doctor(Participant):
 	name = models.CharField(max_length=70, verbose_name=_("full name"))
 	email = models.EmailField(blank=True, null=True)
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
-	verified = models.BooleanField(default=False, verbose_name=_("can receive calls"))
+	verified = models.BooleanField(default=False, verbose_name=_("active"))
 	languages = models.ManyToManyField(Language)
 	last_online = models.DateTimeField(blank=True, null=True)
 	last_notified = models.DateTimeField(blank=True, null=True)
@@ -114,7 +114,7 @@ class ChatMessage(models.Model):
 
 class Disclaimer(models.Model):
 	site = models.ForeignKey(Site, on_delete=models.CASCADE)
-	html = models.TextField()
+	html = models.TextField(verbose_name=_("HTML"))
 
 	def __str__(self):
 		return str(self.site)

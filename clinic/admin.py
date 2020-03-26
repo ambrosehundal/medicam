@@ -4,7 +4,14 @@ from django.urls import reverse
 
 from clinic.models import Disclaimer, Doctor, Language, Report, SelfCertificationQuestion
 
-class DoctorAdmin(admin.ModelAdmin):
+class SiteAdmin(admin.ModelAdmin):
+	def get_queryset(self, request):
+		qs = super(SiteAdmin, self).get_queryset(request)
+		if not request.user.is_superuser:
+			qs = qs.filter(site=get_current_site(request))
+		return qs
+
+class DoctorAdmin(SiteAdmin):
 	list_display=('name', 'verified', 'get_languages', 'push_token', 'in_session')
 	list_filter=('verified', 'languages', 'site')
 	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_online', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent', 'fcm_token')
@@ -26,13 +33,10 @@ class DoctorAdmin(admin.ModelAdmin):
 			list_filter += ('site',)
 		return list_filter
 
-	def get_queryset(self, request):
-		qs = super(DoctorAdmin, self).get_queryset(request)
-		if not request.user.is_superuser:
-			qs = qs.filter(site=get_current_site(request))
-		return qs
+class DisclaimerAdmin(SiteAdmin):
+	pass
 
-admin.site.register(Disclaimer)
+admin.site.register(Disclaimer, DisclaimerAdmin)
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Language)
 admin.site.register(Report)
