@@ -9,7 +9,7 @@ class Participant(models.Model):
 	uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	created = models.DateTimeField(auto_now_add=True)
 	last_updated = models.DateTimeField(auto_now=True)
-	ip_address = models.GenericIPAddressField()
+	ip_address = models.GenericIPAddressField(verbose_name=_("IP address"))
 	twilio_jwt = models.TextField(blank=True, null=True, editable=False)
 	site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
@@ -42,22 +42,22 @@ def upload_filename(instance, filename):
 	return 'credentials/{}{}'.format(instance.uuid, ext)
 
 class Doctor(Participant):
-	name = models.CharField(max_length=70)
+	name = models.CharField(max_length=70, verbose_name=_("full name"))
 	email = models.EmailField(blank=True, null=True)
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
-	verified = models.BooleanField(default=False)
+	verified = models.BooleanField(default=False, verbose_name=_("can receive calls"))
 	languages = models.ManyToManyField(Language)
 	last_online = models.DateTimeField(blank=True, null=True)
 	last_notified = models.DateTimeField(blank=True, null=True)
-	notify = models.BooleanField(default=True)
+	notify = models.BooleanField(default=True, verbose_name=_("send notifications"))
 	notify_interval = models.DurationField(blank=True, null=True, verbose_name=_("notify me no more than once every"), default=timedelta(hours=6))
 	quiet_time_start = models.TimeField(blank=True, null=True, verbose_name=_("start of quiet hours"))
 	quiet_time_end = models.TimeField(blank=True, null=True, verbose_name=_("end of quiet hours"))
-	fcm_token = models.TextField(blank=True, null=True)
+	fcm_token = models.TextField(blank=True, null=True, verbose_name=_("FCM push token"))
 	self_certification_questions = models.ManyToManyField(SelfCertificationQuestion, blank=True)
 	user_agent = models.TextField(blank=True, null=True)
 	remarks = models.TextField(blank=True, verbose_name=_("anything to add?"))
-	utc_offset = models.IntegerField(default=0)
+	utc_offset = models.IntegerField(default=0, verbose_name=_("UTC offset"))
 
 	class Meta:
 		verbose_name = "provider"

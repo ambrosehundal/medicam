@@ -18,6 +18,7 @@ class DoctorAdmin(admin.ModelAdmin):
 
 	def access_url(self, obj):
 		return reverse('consultation') + '?provider_id=' + str(obj.uuid)
+	access_url.short_description = "Access URL"
 
 	def get_list_filter(self, request):
 		list_filter = ('verified', 'languages')

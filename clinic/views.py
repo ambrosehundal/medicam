@@ -21,6 +21,16 @@ from twilio.jwt.access_token.grants import VideoGrant
 SIX_MONTHS = 15552000
 ONE_MONTH = 2629800
 
+def primary_site_only(func):
+	def wrapper(request):
+		site = get_current_site(request)
+		if site.id == 1:
+			return func(request)
+		else:
+			return redirect('disclaimer')
+	return wrapper
+
+@primary_site_only
 def index(request):
 	doctor_id = request.COOKIES.get('doctor_id')
 	if doctor_id:
@@ -28,7 +38,12 @@ def index(request):
 	else:
 		return render(request, 'clinic/index.html')
 
+@primary_site_only
 def volunteer(request):
+	site = get_current_site(request)
+	if site.id != 1:
+		return redirect('disclaimer')
+
 	if request.method == 'POST':
 		form = VolunteerForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -116,7 +131,7 @@ def consultation_doctor(request, doctor):
 			patient.session_started = datetime.now()
 			patient.twilio_jwt = get_twilio_jwt(identity=str(patient.uuid), room=str(patient.uuid))
 			patient.save()
-			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.id), room=str(patient.uuid))
+			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.uuid), room=str(patient.uuid))
 			doctor.save()
 			return redirect('consultation')
 		else:
