@@ -4,7 +4,7 @@
 
 <div class="container disclaimer">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
+    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
     {% if disclaimer %}
       {{ disclaimer.html|safe }}
     {% else %}

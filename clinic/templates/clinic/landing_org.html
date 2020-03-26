@@ -9,7 +9,7 @@
 
 <div class="container intro org">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{% trans "COVID-19 Assist" %}</a></h2>
+    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
     <img src="{% static 'images/telemedicine2.jpg' %}" width="200" class="u-pull-right">
     <h5>{% trans "Coronavirus telehealth platform" %}</h5>
     <p><a href="{% url 'index' %}">{% trans "doc19.org" %}</a> {% trans "was created to connect people with volunteers around the world, but this technology is also available for free to clinics, hospitals and other healthcare organizations serving uninsured and vulnerable groups." %}</p>

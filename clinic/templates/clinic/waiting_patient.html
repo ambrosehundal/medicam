@@ -11,7 +11,7 @@
 
 <div class="container waiting patient">
   <div class="row top">
-    <h2>{% trans "COVID-19 Assist" %}</h2>
+    <h2>{{ request.site.name }}</h2>
     <h4>{% trans "Waiting for a volunteer" %}</h4>
     <p>{% trans "This page will automatically refresh every 15 seconds." %}</p>
     <form action="{% url 'finish' %}" method="post">
