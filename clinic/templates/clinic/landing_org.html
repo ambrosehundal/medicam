@@ -65,7 +65,7 @@
   <div class="row register">
     <h5>{% trans "Get started now" %}</h5>
     <p>{% trans "Try the platform for as long as you want and see if it's right for your organization. We'll get you set up to enroll providers within 24 hours. It takes 2 minutes to apply." %}</p>
-    <p><b>{% trans "Start here:" %} <a href="{% url 'social:begin' 'google' %}?next={% url 'submit_org' %}">{% trans "Sign in with Google" %}</a></b></p>
+    <p><b>{% trans "Start here:" %} <a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'submit_org' %}">{% trans "Sign in with Google" %}</a></b></p>
   </div>
 
   <div class="row more-info">
