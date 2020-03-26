@@ -9,7 +9,7 @@ class Participant(models.Model):
 	uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	created = models.DateTimeField(auto_now_add=True)
 	last_updated = models.DateTimeField(auto_now=True)
-	ip_address = models.GenericIPAddressField(verbose_name=_("IP address"))
+	ip_address = models.GenericIPAddressField(blank=True, null=True, verbose_name=_("IP address"))
 	twilio_jwt = models.TextField(blank=True, null=True, editable=False)
 	site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
