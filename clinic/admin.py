@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from clinic.models import Doctor, Language, Report, SelfCertificationQuestion
 
 class DoctorAdmin(admin.ModelAdmin):

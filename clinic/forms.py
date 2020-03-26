@@ -6,7 +6,8 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import CheckboxSelectMultiple
 from django.utils.translation import gettext as _
 
-from clinic.models import Doctor, SelfCertificationQuestion
+from clinic.models import Doctor, Patient, SelfCertificationQuestion
+
 from durationwidget.widgets import TimeDurationWidget
 
 class TimeInput(forms.TimeInput):
@@ -44,3 +45,8 @@ class DoctorForm(forms.ModelForm):
 			raise ValidationError(_("You must confirm all items."))
 
 		return answered
+
+class FeedbackForm(forms.ModelForm):
+	class Meta:
+		model = Patient
+		fields = ['feedback_response', 'feedback_text']

@@ -71,6 +71,12 @@ class Doctor(Participant):
 	def in_session(self):
 		return self.patient_set.filter(session_started__isnull=False, session_ended__isnull=True).count() > 0
 
+FEEDBACK_CHOICES=(
+	(0, 'Yes'),
+	(1, 'No, there was a technical problem'),
+	(2, 'No, there was a problem with the volunteer')
+)
+
 class Patient(Participant):
 	language = models.ForeignKey(Language, models.PROTECT)
 	doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
@@ -79,6 +85,8 @@ class Patient(Participant):
 	notes = models.TextField(blank=True)
 	enable_video = models.BooleanField()
 	text_only = models.BooleanField(default=False)
+	feedback_response = models.IntegerField(default=0, verbose_name=_("did everything go well?"), choices=FEEDBACK_CHOICES)
+	feedback_text = models.TextField(blank=True, verbose_name=_("any feedback for us?"))
 
 	@property
 	def in_session(self):

@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+import json
+
 from django.conf import settings
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
@@ -5,15 +8,12 @@ from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
-from clinic.forms import DoctorForm
+from clinic.forms import DoctorForm, FeedbackForm
 from clinic.models import ChatMessage, Doctor, Language, Patient, SelfCertificationQuestion
 
 from ipware import get_client_ip
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
-
-from datetime import datetime, timedelta
-import json
 
 SIX_MONTHS = 15552000
 ONE_MONTH = 2629800
@@ -131,11 +131,28 @@ def consultation_patient(request, patient):
 
 @transaction.atomic
 def finish(request):
-	response = redirect('index')
-	if request.method != 'POST':
-		return response
-
 	doctor_id = request.COOKIES.get('doctor_id')
+	patient_id = request.COOKIES.get('patient_id')
+
+	response = redirect('index')
+
+	if patient_id:
+		if request.method != 'POST':
+			return render(request, 'clinic/finish.html', {'form': FeedbackForm()})
+		response.delete_cookie('patient_id')
+		try:
+			patient = Patient.objects.get(uuid=patient_id)
+		except Patient.DoesNotExist:
+			return response
+		form = FeedbackForm(request.POST, instance=patient)
+		if form.is_valid():
+			patient = form.save(commit=False)
+			patient.session_ended = datetime.now()
+			patient.save()
+			form.save_m2m()
+		else:
+			return render(request, 'clinic/finish.html', {'form': form})
+
 	if doctor_id:
 		try:
 			doctor = Doctor.objects.get(uuid=doctor_id)
@@ -144,16 +161,6 @@ def finish(request):
 				patient.session_ended = datetime.now()
 				patient.save()
 		except Doctor.DoesNotExist:	
-			pass
-
-	patient_id = request.COOKIES.get('patient_id')
-	if patient_id:
-		response.delete_cookie('patient_id')
-		try:
-			patient = Patient.objects.get(uuid=patient_id)
-			patient.session_ended = datetime.now()
-			patient.save()
-		except Patient.DoesNotExist:
 			pass
 
 	return response

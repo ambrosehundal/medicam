@@ -1,0 +1,22 @@
+{% extends "clinic/base.html" %}
+{% load i18n static %}
+
+{% block content %}
+
+<div class="container finish">
+  <div class="row top">
+    <h2>{% trans "COVID-19 Assist" %}</h2>
+    <p>We hope that we were able to help.</p>
+  </div>
+
+  <div class="row">
+    <form action="{% url 'finish' %}" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <br>
+      <input class="button-primary" type="submit" value="End Session">
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,6 +1,5 @@
 {% extends "clinic/base.html" %}
-{% load i18n %}
-{% load static widget_tweaks %}
+{% load i18n static widget_tweaks %}
 
 {% block head %}
 <script src="//media.twiliocdn.com/sdk/js/video/releases/2.0.0/twilio-video.min.js"></script>
@@ -35,7 +34,7 @@
       document.getElementById('notify-warning').style.display = 'block';
       document.getElementById('id_notify').checked = false;
     }
-    document.getElementById('id_utc_offset').value = (new Date()).getTimezoneOffset();
+    document.getElementById('id_utc_offset').value = new Date().getTimezoneOffset();
   });
 </script>
 {% endblock %}
