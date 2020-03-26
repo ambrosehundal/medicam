@@ -1,5 +1,6 @@
 {% extends "clinic/base.html" %}
 {% load i18n static %}
+
 {% block content %}
 
 <div class="container">
@@ -33,8 +34,11 @@
         {% trans "This website is a place to get help with Coronavirus if you don't have access to a doctor." %}
         {% trans "Video chat with volunteers who can answer your questions." %}
       </p>
-      <p><a href="{% url 'faq' %}">Find answers for frequently asked questions about COVID-19.</a></p>
-      <p><a href="{% url 'landing_doctor' %}">See how it works for volunteers.</a></p>
+      <ul>
+        <li><a href="{% url 'faq' %}">Find answers for frequently asked questions about COVID-19.</a></li>
+        <li><a href="{% url 'landing_doctor' %}">See how it works for volunteers.</a></li>
+        <li><a href="{% url 'landing_org' %}"><b>New:</b> Our platform is available for clinics and other organizations.</a></li>
+      </ul>
     </div>
     <div class="five columns stock-photo">
       <img src="{% static 'images/telemedicine.png' %}" width="250">

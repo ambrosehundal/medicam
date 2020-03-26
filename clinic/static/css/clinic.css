@@ -135,6 +135,10 @@ ul.errorlist li {
 	}
 }
 
+.row.intro ul {
+	list-style-type: none;
+}
+
 .volunteer .row.notify, #notify-options {
 	margin-top: 20px;
 }
