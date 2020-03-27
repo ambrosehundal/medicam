@@ -152,7 +152,7 @@ def send_notification(doctor):
 	doctor.last_notified = datetime.now()
 	doctor.save()
 
-	logger.info("Sending push notification to {}".format(doctor))
+	logger.info("Patient is waiting, sending push notification to {}".format(doctor))
 	#TODO: actually send notification via FCM
 
 SEND_FIRST_NOTIFICATION_AFTER=timedelta(minutes=1)
@@ -170,7 +170,7 @@ def maybe_send_notification(request, patient):
 	elif doctor is None:
 		# notify_object returns False if a doctor was last notified within the frequency,
 		# or None if a notification should be sent but no doctor is eligible for notifications
-		logger.warning("Patient is waiting, but there's no {}-speaking doctor left to notify".format(patient.language))
+		logger.warning("Patient is waiting, but there's no {}-speaking doctor to notify".format(patient.language))
 
 @transaction.atomic
 def consultation_patient(request, patient):
