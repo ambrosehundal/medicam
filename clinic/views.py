@@ -155,7 +155,7 @@ def send_notification(doctor):
 	logger.info("Patient is waiting, sending push notification to {}".format(doctor))
 	#TODO: actually send notification via FCM
 
-SEND_FIRST_NOTIFICATION_AFTER=timedelta(minutes=1)
+SEND_FIRST_NOTIFICATION_AFTER=timedelta(seconds=30)
 NOTIFICATION_FREQUENCY=timedelta(minutes=2)
 
 def maybe_send_notification(request, patient):

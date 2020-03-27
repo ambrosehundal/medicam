@@ -188,6 +188,10 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
+        'clinic': {
+            'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     },
