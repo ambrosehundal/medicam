@@ -148,13 +148,14 @@ class Patient(Participant):
 	@property
 	def wait_duration(self):
 		if not self.last_seen:
-			return timedelta()
+			d = timedelta()
 		elif not self.session_started and not self.online:
-			return self.last_seen - self.created
+			d = self.last_seen - self.created
 		elif self.session_started:
-			return self.session_started - self.created
+			d = self.session_started - self.created
 		else:
-			return datetime.now() - self.created
+			d = datetime.now() - self.created
+		return d - timedelta(microseconds=d.microseconds)
 
 class Report(models.Model):
 	by_doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
