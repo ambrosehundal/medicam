@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-import json
+import json, logging
 
 from django.conf import settings
 from django.core.mail import mail_admins
@@ -21,6 +21,8 @@ from twilio.jwt.access_token.grants import VideoGrant
 
 SIX_MONTHS = 15552000
 ONE_MONTH = 2629800
+
+logger = logging.getLogger(__name__)
 
 def primary_site_only(func):
 	def wrapper(request):
@@ -146,11 +148,37 @@ def consultation_doctor(request, doctor):
 		},
 	})
 
+def send_notification(doctor):
+	doctor.last_notified = datetime.now()
+	doctor.save()
+
+	logger.info("Sending push notification to {}".format(doctor))
+	#TODO: actually send notification via FCM
+
+SEND_FIRST_NOTIFICATION_AFTER=timedelta(minutes=1)
+NOTIFICATION_FREQUENCY=timedelta(minutes=2)
+
+def maybe_send_notification(request, patient):
+	# don't start sending notifications until the patient has been waiting for a minimum amount of time
+	if patient.wait_duration < SEND_FIRST_NOTIFICATION_AFTER:
+		return
+
+	doctors = Doctor.objects.filter(site=get_current_site(request), languages=patient.language)
+	doctor = Doctor.notify_object(doctors, NOTIFICATION_FREQUENCY)
+	if doctor:
+		send_notification(doctor)
+	elif doctor is None:
+		# notify_object returns False if a doctor was last notified within the frequency,
+		# or None if a notification should be sent but no doctor is eligible for notifications
+		logger.warning("Patient is waiting, but there's no {}-speaking doctor left to notify".format(patient.language))
+
+@transaction.atomic
 def consultation_patient(request, patient):
 	patient.last_seen = datetime.now()
 	patient.save()
 
 	if not patient.in_session:
+		maybe_send_notification(request, patient)
 		return render(request, 'clinic/waiting_patient.html')
 	else:
 		return render(request, 'clinic/session_patient.html', context={

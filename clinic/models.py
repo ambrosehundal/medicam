@@ -44,7 +44,7 @@ def upload_filename(instance, filename):
 	ext = os.path.splitext(filename)[-1].lower()
 	return 'credentials/{}{}'.format(instance.uuid, ext)
 
-DOCTOR_VERIFICATION_PROBLEM_CHOICES=(
+VERIFICATION_PROBLEM_CHOICES=(
 	(0, "N/A"),
 	(1, "Submitted a resume or CV"),
 	(2, "Submitted an unacceptable credential"),
@@ -57,7 +57,7 @@ class Doctor(Participant):
 	email = models.EmailField(blank=True, null=True)
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
 	verified = models.BooleanField(default=False, verbose_name=_("approved"), help_text=_("Allows the provider to receive calls."))
-	verification_problem = models.PositiveIntegerField(default=0, choices=DOCTOR_VERIFICATION_PROBLEM_CHOICES)
+	verification_problem = models.PositiveIntegerField(default=0, choices=VERIFICATION_PROBLEM_CHOICES)
 	languages = models.ManyToManyField(Language)
 	last_notified = models.DateTimeField(blank=True, null=True)
 	notify = models.BooleanField(default=True, verbose_name=_("send notifications"), help_text=_("Not yet implemented"))
@@ -88,9 +88,9 @@ class Doctor(Participant):
 		return self.patient_set.filter(session_started__isnull=False, session_ended__isnull=True).count() > 0
 
 	@classmethod
-	def notify_queryset(self, language):
+	def notify_filter(self, qs):
 		# start with those who want notifications and have a push token
-		qs = self.objects.filter(verified=True, languages=language, notify=True, fcm_token__isnull=False)
+		qs = qs.filter(verified=True, notify=True, fcm_token__isnull=False)
 		qs = qs.exclude(fcm_token='')
 
 		# exclude those last notified within their notify_interval
@@ -107,6 +107,13 @@ class Doctor(Participant):
 		not_quiet_time = null_qt | Q(utc_quiet_time_start__gt=current_time_epoch, utc_quiet_time_end__lt=current_time_epoch)
 
 		return qs.filter(due_for_notification & not_quiet_time)
+
+	@classmethod
+	def notify_object(self, queryset, frequency):
+		if queryset.filter(last_notified__gt=datetime.now()-frequency).count() == 0:
+			return self.notify_filter(queryset).order_by('last_notified').first()
+		else:
+			return False
 
 FEEDBACK_CHOICES=(
 	(0, "Yes"),
