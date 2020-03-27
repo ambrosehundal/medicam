@@ -108,7 +108,7 @@ class Patient(Participant):
 
 	@property
 	def wait_duration(self):
-		if not self.session_started and not self.online:
+		if self.last_seen and not self.session_started and not self.online:
 			return self.last_seen - self.created
 		elif self.session_started:
 			return self.session_started - self.created
