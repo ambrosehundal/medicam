@@ -91,14 +91,14 @@ class Doctor(Participant):
 	def notify_queryset(self, language):
 		# start with those who want notifications and have a push token
 		qs = self.objects.filter(verified=True, languages=language, notify=True, fcm_token__isnull=False)
+		qs = qs.exclude(fcm_token='')
 
 		# exclude those last notified within their notify_interval
 		due_for_notification = Q(last_notified__isnull=True) | Q(notify_interval__lt=datetime.now()-F('last_notified'))
 
 		# annotate with quiet time in UTC
 		local_to_utc = lambda field: Extract(field, 'epoch') + (F('utc_offset') * 60)
-		qs = qs.annotate(utc_quiet_time_start=local_to_utc('quiet_time_start'))
-		qs = qs.annotate(utc_quiet_time_end=local_to_utc('quiet_time_end'))
+		qs = qs.annotate(utc_quiet_time_start=local_to_utc('quiet_time_start'), utc_quiet_time_end=local_to_utc('quiet_time_end'))
 
 		# filter out those currently in quiet time
 		null_qt = Q(quiet_time_start__isnull=True) | Q(quiet_time_end__isnull=True)
