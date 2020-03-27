@@ -134,7 +134,7 @@ def consultation_doctor(request, doctor):
 			patient.session_started = datetime.now()
 			patient.twilio_jwt = get_twilio_jwt(identity=str(patient.uuid), room=str(patient.uuid))
 			patient.save()
-			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.uuid), room=str(patient.uuid))
+			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.id), room=str(patient.uuid))
 			doctor.save()
 			return redirect('consultation')
 		else:
@@ -148,11 +148,11 @@ def consultation_doctor(request, doctor):
 		},
 	})
 
-def send_notification(doctor):
+def send_notification(doctor, patient):
 	doctor.last_notified = datetime.now()
 	doctor.save()
 
-	logger.info("Patient is waiting, sending push notification to {}".format(doctor))
+	logger.info("Patient is waiting, sending notification to {} (waiting for {})".format(doctor, patient.wait_duration))
 	#TODO: actually send notification via FCM
 
 SEND_FIRST_NOTIFICATION_AFTER=timedelta(seconds=30)
@@ -166,7 +166,7 @@ def maybe_send_notification(request, patient):
 	doctors = Doctor.objects.filter(site=get_current_site(request), languages=patient.language)
 	doctor = Doctor.notify_object(doctors, NOTIFICATION_FREQUENCY)
 	if doctor:
-		send_notification(doctor)
+		send_notification(doctor, patient)
 	elif doctor is None:
 		# notify_object returns False if a doctor was last notified within the frequency,
 		# or None if a notification should be sent but no doctor is eligible for notifications
