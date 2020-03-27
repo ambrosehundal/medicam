@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 from django.utils.translation import gettext_lazy as _
 import dj_database_url
-import os
+import json, os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -210,3 +210,14 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True)
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False)
+
+
+# Firebase
+
+import firebase_admin
+from firebase_admin import credentials
+
+service_account = os.getenv('FIREBASE_SERVICE_ACCOUNT')
+if service_account:
+    cred = credentials.Certificate(json.loads(service_account))
+    firebase_admin.initialize_app(cred)

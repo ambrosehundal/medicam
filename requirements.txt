@@ -4,6 +4,7 @@ django-durationwidget
 django-ipware
 django-storages
 django-widget-tweaks
+firebase-admin
 gunicorn
 psycopg2
 social-auth-app-django

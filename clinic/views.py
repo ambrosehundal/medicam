@@ -15,6 +15,7 @@ from clinic.forms import FeedbackForm, OrgRequestForm, VolunteerForm
 from clinic.models import ChatMessage, Disclaimer, Doctor, Language, Patient, SelfCertificationQuestion
 from clinic.models import PATIENT_OFFLINE_AFTER
 
+from firebase_admin import messaging
 from ipware import get_client_ip
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
@@ -153,10 +154,26 @@ def send_notification(doctor, patient):
 	doctor.save()
 
 	logger.info("Patient is waiting, sending notification to {} (waiting for {})".format(doctor, patient.wait_duration))
-	#TODO: actually send notification via FCM
+
+	wait_minutes = int(patient.wait_duration.total_seconds() / 60)
+	if wait_minutes <= 1:
+		wait_minutes_str = "1 minute"
+	else:
+		wait_minutes_str = "{} minutes".format(wait_minutes)
+
+	message = messaging.Message(
+		notification=messaging.Notification(
+			title="Incoming call on doc19.org",
+			body="Someone has been waiting for {}".format(wait_minutes_str),
+		),
+		token=doctor.fcm_token,
+	)
+
+	response = messaging.send(message)
+	logger.info("Sent notification to {}: {}".format(doctor, response))
 
 SEND_FIRST_NOTIFICATION_AFTER=timedelta(seconds=30)
-NOTIFICATION_FREQUENCY=timedelta(minutes=2)
+NOTIFICATION_FREQUENCY=timedelta(minutes=3)
 
 def maybe_send_notification(request, patient):
 	# don't start sending notifications until the patient has been waiting for a minimum amount of time
