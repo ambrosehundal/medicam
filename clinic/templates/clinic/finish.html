@@ -10,12 +10,14 @@
   </div>
 
   <div class="row">
-    <form action="{% url 'finish' %}" method="post">
-      {% csrf_token %}
-      {{ form }}
-      <br>
-      <input class="button-primary" type="submit" value="End Session">
-    </form>
+    <div class="six columns">
+      <form action="{% url 'finish' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <br>
+        <input class="button-primary" type="submit" value="End Session">
+      </form>
+    </div>
   </div>
 </div>
 

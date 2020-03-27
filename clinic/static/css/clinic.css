@@ -257,6 +257,10 @@ div.chat li .time {
 	width: 100%;
 }
 
+.finish textarea {
+	width: 100%;
+}
+
 .disclaimer form {
 	margin-top: 20px;
 }

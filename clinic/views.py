@@ -6,13 +6,14 @@ from django.core.mail import mail_admins
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
 from clinic.forms import FeedbackForm, OrgRequestForm, VolunteerForm
 from clinic.models import ChatMessage, Disclaimer, Doctor, Language, Patient, SelfCertificationQuestion
+from clinic.models import PATIENT_OFFLINE_AFTER
 
 from ipware import get_client_ip
 from twilio.jwt.access_token import AccessToken
@@ -118,14 +119,14 @@ def get_twilio_jwt(identity, room):
 
 @transaction.atomic
 def consultation_doctor(request, doctor):
+	doctor.last_seen = datetime.now()
+	doctor.save()
+
 	if not doctor.verified:
 		return render(request, 'clinic/unverified.html')
 
-	doctor.last_online = datetime.now()
-	doctor.save()
-
 	if not doctor.patient:
-		patient = Patient.objects.order_by('id').filter(site=doctor.site, language__in=doctor.languages.all(), session_started__isnull=True).first()
+		patient = Patient.objects.order_by('id').filter(site=doctor.site, language__in=doctor.languages.all(), session_started__isnull=True, last_seen__gt=datetime.now()-PATIENT_OFFLINE_AFTER).first()
 		if patient:
 			patient.doctor = doctor
 			patient.session_started = datetime.now()
@@ -146,6 +147,9 @@ def consultation_doctor(request, doctor):
 	})
 
 def consultation_patient(request, patient):
+	patient.last_seen = datetime.now()
+	patient.save()
+
 	if not patient.in_session:
 		return render(request, 'clinic/waiting_patient.html')
 	else:
@@ -205,7 +209,7 @@ def chat(request):
 		try:
 			patient = Patient.objects.only('uuid').get(doctor__uuid=doctor_id, session_started__isnull=False, session_ended__isnull=True)
 		except Patient.DoesNotExist:
-			return HttpResponseBadRequest("no active session")
+			return HttpResponseNotFound("no active session")
 	else:
 		return HttpResponseBadRequest("patient_id or doctor_id required")
 
@@ -247,5 +251,4 @@ def submit_org(request):
 			mail_admins("Organization request", str(form.cleaned_data))
 	else:
 		form = OrgRequestForm()
-
 	return render(request, 'clinic/submit_org.html', {'form': form})

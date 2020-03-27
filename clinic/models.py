@@ -3,12 +3,13 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 import os, uuid
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 class Participant(models.Model):
 	uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	created = models.DateTimeField(auto_now_add=True)
 	last_updated = models.DateTimeField(auto_now=True)
+	last_seen = models.DateTimeField(blank=True, null=True)
 	ip_address = models.GenericIPAddressField(blank=True, null=True, verbose_name=_("IP address"))
 	twilio_jwt = models.TextField(blank=True, null=True, editable=False)
 	site = models.ForeignKey(Site, on_delete=models.CASCADE)
@@ -45,9 +46,8 @@ class Doctor(Participant):
 	name = models.CharField(max_length=70, verbose_name=_("full name"))
 	email = models.EmailField(blank=True, null=True)
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
-	verified = models.BooleanField(default=False, verbose_name=_("active"), help_text=_("Allows the provider to receive calls."))
+	verified = models.BooleanField(default=False, verbose_name=_("approved"), help_text=_("Allows the provider to receive calls."))
 	languages = models.ManyToManyField(Language)
-	last_online = models.DateTimeField(blank=True, null=True)
 	last_notified = models.DateTimeField(blank=True, null=True)
 	notify = models.BooleanField(default=True, verbose_name=_("send notifications"), help_text=_("Not yet implemented"))
 	notify_interval = models.DurationField(blank=True, null=True, verbose_name=_("notify me no more than once every"), default=timedelta(hours=6))
@@ -82,20 +82,38 @@ FEEDBACK_CHOICES=(
 	(2, 'No, there was a problem with the volunteer')
 )
 
+PATIENT_OFFLINE_AFTER=timedelta(minutes=1)
+
 class Patient(Participant):
 	language = models.ForeignKey(Language, models.PROTECT)
 	doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
 	session_started = models.DateTimeField(blank=True, null=True)
 	session_ended = models.DateTimeField(blank=True, null=True)
-	notes = models.TextField(blank=True)
+	notes = models.TextField(blank=True, editable=False)
 	enable_video = models.BooleanField()
 	text_only = models.BooleanField(default=False)
 	feedback_response = models.IntegerField(default=0, verbose_name=_("did everything go well?"), choices=FEEDBACK_CHOICES)
 	feedback_text = models.TextField(blank=True, verbose_name=_("any feedback for us?"))
 
+	def __str__(self):
+		return str(self.id)
+
 	@property
 	def in_session(self):
 		return hasattr(self, 'doctor') and self.session_started and not self.session_ended
+
+	@property
+	def online(self):
+		return bool(self.last_seen) and self.last_seen + PATIENT_OFFLINE_AFTER > datetime.now()
+
+	@property
+	def wait_duration(self):
+		if not self.session_started and not self.online:
+			return self.last_seen - self.created
+		elif self.session_started:
+			return self.session_started - self.created
+		else:
+			return datetime.now() - self.created
 
 class Report(models.Model):
 	by_doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
