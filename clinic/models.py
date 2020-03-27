@@ -1,5 +1,7 @@
 from django.contrib.sites.models import Site
 from django.db import models
+from django.db.models import ExpressionWrapper, F, IntegerField, Q, TimeField
+from django.db.models.functions import Cast, Extract
 from django.utils.translation import gettext as _
 
 import os, uuid
@@ -42,11 +44,20 @@ def upload_filename(instance, filename):
 	ext = os.path.splitext(filename)[-1].lower()
 	return 'credentials/{}{}'.format(instance.uuid, ext)
 
+DOCTOR_VERIFICATION_PROBLEM_CHOICES=(
+	(0, "N/A"),
+	(1, "Submitted a resume or CV"),
+	(2, "Submitted an unacceptable credential"),
+	(3, "Fake or malicious submission"),
+	(4, "Other"),
+)
+
 class Doctor(Participant):
 	name = models.CharField(max_length=70, verbose_name=_("full name"))
 	email = models.EmailField(blank=True, null=True)
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
 	verified = models.BooleanField(default=False, verbose_name=_("approved"), help_text=_("Allows the provider to receive calls."))
+	verification_problem = models.PositiveIntegerField(default=0, choices=DOCTOR_VERIFICATION_PROBLEM_CHOICES)
 	languages = models.ManyToManyField(Language)
 	last_notified = models.DateTimeField(blank=True, null=True)
 	notify = models.BooleanField(default=True, verbose_name=_("send notifications"), help_text=_("Not yet implemented"))
@@ -76,10 +87,31 @@ class Doctor(Participant):
 	def in_session(self):
 		return self.patient_set.filter(session_started__isnull=False, session_ended__isnull=True).count() > 0
 
+	@classmethod
+	def notify_queryset(self, language):
+		# start with those who want notifications and have a push token
+		qs = self.objects.filter(verified=True, languages=language, notify=True, fcm_token__isnull=False)
+
+		# exclude those last notified within their notify_interval
+		due_for_notification = Q(last_notified__isnull=True) | Q(notify_interval__lt=datetime.now()-F('last_notified'))
+
+		# annotate with quiet time in UTC
+		local_to_utc = lambda field: Extract(field, 'epoch') + (F('utc_offset') * 60)
+		qs = qs.annotate(utc_quiet_time_start=local_to_utc('quiet_time_start'))
+		qs = qs.annotate(utc_quiet_time_end=local_to_utc('quiet_time_end'))
+
+		# filter out those currently in quiet time
+		null_qt = Q(quiet_time_start__isnull=True) | Q(quiet_time_end__isnull=True)
+		current_time = datetime.utcnow().time()
+		current_time_epoch = (current_time.hour * 60 * 60) + (current_time.minute * 60) + current_time.second
+		not_quiet_time = null_qt | Q(utc_quiet_time_start__gt=current_time_epoch, utc_quiet_time_end__lt=current_time_epoch)
+
+		return qs.filter(due_for_notification & not_quiet_time)
+
 FEEDBACK_CHOICES=(
-	(0, 'Yes'),
-	(1, 'No, there was a technical problem'),
-	(2, 'No, there was a problem with the volunteer')
+	(0, "Yes"),
+	(1, "No, there was a technical problem"),
+	(2, "No, there was a problem with the volunteer")
 )
 
 PATIENT_OFFLINE_AFTER=timedelta(minutes=1)
@@ -108,7 +140,9 @@ class Patient(Participant):
 
 	@property
 	def wait_duration(self):
-		if self.last_seen and not self.session_started and not self.online:
+		if not self.last_seen:
+			return timedelta()
+		elif not self.session_started and not self.online:
 			return self.last_seen - self.created
 		elif self.session_started:
 			return self.session_started - self.created
