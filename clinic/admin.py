@@ -49,6 +49,9 @@ class PatientAdmin(SiteAdmin):
 			list_filter += ('site',)
 		return list_filter
 
+	def has_add_permission(self, request, obj=None):
+		return False
+
 admin.site.register(Disclaimer, DisclaimerAdmin)
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Language)
