@@ -24,14 +24,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', False)
-
+# default SECRET_KEY for GitHub Actions
 GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS')
-
-# default SECRET_KEY
 if GITHUB_ACTIONS and not SECRET_KEY:
     SECRET_KEY = 'x'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DEBUG', False)
 
 # set SITE_ID to 1 for local development
 SITE_ID = os.getenv('SITE_ID')
@@ -233,8 +232,9 @@ TEST_FCM_TOKEN = os.getenv('TEST_FCM_TOKEN')
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-sentry_sdk.init(
-    dsn="https://b044df58ab5d4c94b761f0550c97c6a1@sentry.io/5178154",
-    integrations=[DjangoIntegration()],
-    send_default_pii=False
-)
+if not DEBUG:
+    sentry_sdk.init(
+        dsn="https://b044df58ab5d4c94b761f0550c97c6a1@sentry.io/5178154",
+        integrations=[DjangoIntegration()],
+        send_default_pii=False
+    )
