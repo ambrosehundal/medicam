@@ -46,7 +46,7 @@ def upload_filename(instance, filename):
 
 VERIFICATION_PROBLEM_CHOICES=(
 	(0, "N/A"),
-	(1, "Submitted a resume or CV"),
+	#(1, "Submitted a resume or CV"),
 	(2, "Submitted an unacceptable credential"),
 	(3, "Fake or malicious submission"),
 	(4, "Other"),
@@ -90,7 +90,7 @@ class Doctor(Participant):
 	@classmethod
 	def notify_filter(self, qs):
 		# start with those who want notifications and have a push token
-		qs = qs.filter(verified=True, notify=True, fcm_token__isnull=False, last_seen__isnull=False).order_by('-last_seen')
+		qs = qs.filter(verified=True, notify=True, fcm_token__isnull=False, last_seen__isnull=False)
 		qs = qs.exclude(fcm_token='')
 
 		# exclude those last notified within their notify_interval
@@ -106,7 +106,7 @@ class Doctor(Participant):
 		current_time_epoch = (current_time.hour * 60 * 60) + (current_time.minute * 60) + current_time.second
 		not_quiet_time = null_qt | Q(utc_quiet_time_start__gt=current_time_epoch, utc_quiet_time_end__lt=current_time_epoch)
 
-		return qs.filter(due_for_notification & not_quiet_time)
+		return qs.filter(due_for_notification & not_quiet_time).order_by('-last_seen')
 
 	@classmethod
 	def notify_object(self, queryset, frequency):
