@@ -90,7 +90,7 @@ class Doctor(Participant):
 	@classmethod
 	def notify_filter(self, qs):
 		# start with those who want notifications and have a push token
-		qs = qs.filter(verified=True, notify=True, fcm_token__isnull=False)
+		qs = qs.filter(verified=True, notify=True, fcm_token__isnull=False, last_seen__isnull=False).order_by('-last_seen')
 		qs = qs.exclude(fcm_token='')
 
 		# exclude those last notified within their notify_interval
