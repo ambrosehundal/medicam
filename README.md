@@ -15,7 +15,11 @@ You can use [asdf] to manage your environment versions.
 
 The easiest way to run the app is utilizing [heroku-cli].
 
-`heroku local web`
+```
+export SECRET_KEY=x SITE_ID=1 DATABASE_URL=sqlite:///db.sqlite3
+python3 manage.py collectstatic
+heroku local web
+```
 
 ## Resources
 - Help With COVID project page: https://helpwithcovid.com/projects/147
