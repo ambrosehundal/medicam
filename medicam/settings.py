@@ -33,9 +33,7 @@ GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS')
 if (DEBUG or GITHUB_ACTIONS) and not SECRET_KEY:
     SECRET_KEY = 'x'
 
-ALLOWED_HOSTS = ['localhost', '192.168.1.30', 'doc19.org', '.platform.doc19.org']
-
-# set to SITE_ID to 1 for local development
+# set SITE_ID to 1 for local development
 SITE_ID = os.getenv('SITE_ID')
 
 
@@ -93,6 +91,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'medicam.wsgi.application'
+
+ALLOWED_HOSTS = ['localhost', 'doc19.org', '.platform.doc19.org']
 
 
 # Database
