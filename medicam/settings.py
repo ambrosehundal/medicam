@@ -223,3 +223,15 @@ if service_account:
     firebase_admin.initialize_app(cred)
 
 TEST_FCM_TOKEN = os.getenv('TEST_FCM_TOKEN')
+
+
+# Sentry
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://b044df58ab5d4c94b761f0550c97c6a1@sentry.io/5178154",
+    integrations=[DjangoIntegration()],
+    send_default_pii=False
+)

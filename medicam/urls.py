@@ -7,7 +7,11 @@ class ServiceWorkerView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'fcm/firebase-messaging-sw.js', content_type="application/x-javascript")
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
 urlpatterns = [
+    path('sentry-debug/', trigger_error),
     path('admin123/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     path('clinic/', include('clinic.urls')),

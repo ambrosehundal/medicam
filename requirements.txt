@@ -7,6 +7,7 @@ django-widget-tweaks
 firebase-admin
 gunicorn
 psycopg2
+sentry-sdk
 social-auth-app-django
 twilio
 whitenoise

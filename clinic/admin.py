@@ -13,7 +13,7 @@ class SiteAdmin(admin.ModelAdmin):
 		return qs
 
 class DoctorAdmin(SiteAdmin):
-	list_display=('name', 'verified', 'get_languages', 'push_token', 'in_session')
+	list_display=('name', 'verified', 'get_languages', 'push_token', 'in_session', 'last_seen')
 	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_seen', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent', 'fcm_token')
 
 	def get_languages(self, obj):
