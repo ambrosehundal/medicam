@@ -14,9 +14,9 @@
     <h2>{{ request.site.name }}</h2>
     <h4>{% trans "Waiting for a volunteer" %}</h4>
     <p>{% trans "This page will automatically refresh every 15 seconds." %}</p>
-    <form action="{% url 'finish' %}" method="get">
+    <form action="{% url 'finish' %}" method="post">
       {% csrf_token %}
-      <input class="button" type="submit" value="{% trans "Cancel" %}">
+      <input class="button" type="submit" value="{% trans "Cancel" %}" name="end_session">
     </form>
   </div>
 </div>

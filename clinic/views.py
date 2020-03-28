@@ -36,17 +36,13 @@ def primary_site_only(func):
 
 @primary_site_only
 def index(request):
-	doctor_id = request.COOKIES.get('doctor_id')
-	if doctor_id:
-		return redirect('consultation')
-	else:
-		return render(request, 'clinic/index.html')
+	return render(request, 'clinic/index.html', {
+		'doctor_id': request.COOKIES.get('doctor_id')}
+	)
 
 @primary_site_only
 def volunteer(request):
 	site = get_current_site(request)
-	if site.id != 1:
-		return redirect('disclaimer')
 
 	if request.method == 'POST':
 		form = VolunteerForm(request.POST, request.FILES)
@@ -141,7 +137,8 @@ def consultation_doctor(request, doctor):
 		else:
 			return render(request, 'clinic/waiting_doctor.html')
 
-	return render(request, 'clinic/session_doctor.html', context={
+	return render(request, 'clinic/session.html', context={
+		'user_type': 'doctor',
 		'video_data': {
 			'token': doctor.twilio_jwt,
 			'room': str(doctor.patient.uuid),
@@ -198,7 +195,8 @@ def consultation_patient(request, patient):
 		maybe_send_notification(request, patient)
 		return render(request, 'clinic/waiting_patient.html')
 	else:
-		return render(request, 'clinic/session_patient.html', context={
+		return render(request, 'clinic/session.html', context={
+			'user_type': 'patient',
 			'doctor': patient.doctor,
 			'video_data': {
 				'token': patient.twilio_jwt,
@@ -209,13 +207,29 @@ def consultation_patient(request, patient):
 
 @transaction.atomic
 def finish(request):
+	response = redirect('index')
+	if request.method != 'POST':
+		return response
+
 	doctor_id = request.COOKIES.get('doctor_id')
 	patient_id = request.COOKIES.get('patient_id')
+	if doctor_id:
+		try:
+			doctor = Doctor.objects.get(uuid=doctor_id)
+			patient = doctor.patient
+			if patient:
+				patient.session_ended = datetime.now()
+				patient.save()
+		except Doctor.DoesNotExist:
+			pass
 
-	response = redirect('index')
+		if 'stop_consulting' in request.POST:
+			return response
+		else:
+			return redirect(consultation)
 
-	if patient_id:
-		if request.method != 'POST':
+	elif patient_id:
+		if 'end_session' in request.POST:
 			return render(request, 'clinic/finish.html', {'form': FeedbackForm()})
 		response.delete_cookie('patient_id')
 		try:
@@ -231,15 +245,6 @@ def finish(request):
 		else:
 			return render(request, 'clinic/finish.html', {'form': form})
 
-	if doctor_id:
-		try:
-			doctor = Doctor.objects.get(uuid=doctor_id)
-			patient = doctor.patient
-			if patient:
-				patient.session_ended = datetime.now()
-				patient.save()
-		except Doctor.DoesNotExist:	
-			pass
 
 	return response
 
@@ -266,7 +271,7 @@ def chat(request):
 		if (msg.doctor and doctor_id) or (not msg.doctor and patient_id):
 			name = _("You")
 		elif msg.doctor:
-			name = msg.doctor.name 
+			name = msg.doctor.name
 		else:
 			name = _("Visitor")
 

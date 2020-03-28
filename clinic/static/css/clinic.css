@@ -44,6 +44,10 @@ h2 a {
 	background-color: #f5f7ff;
 }
 
+.start-button.registered-doctor {
+	border: 5px solid #4b4;
+}
+
 .row.top, .row.footer, .row.self-cert {
 	margin-top: 20px;
 }
