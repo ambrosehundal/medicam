@@ -221,3 +221,5 @@ service_account = os.getenv('FIREBASE_SERVICE_ACCOUNT')
 if service_account:
     cred = credentials.Certificate(json.loads(service_account))
     firebase_admin.initialize_app(cred)
+
+TEST_FCM_TOKEN = os.getenv('TEST_FCM_TOKEN')

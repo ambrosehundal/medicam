@@ -166,7 +166,7 @@ def send_notification(doctor, patient):
 			title="Incoming call on doc19.org",
 			body="Someone has been waiting for {}".format(wait_minutes_str),
 		),
-		token=doctor.fcm_token,
+		token=settings.TEST_FCM_TOKEN or doctor.fcm_token,
 	)
 
 	response = messaging.send(message)
