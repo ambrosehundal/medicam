@@ -14,7 +14,7 @@ class SiteAdmin(admin.ModelAdmin):
 
 class DoctorAdmin(SiteAdmin):
 	list_display=('name', 'verified', 'get_languages', 'push_token', 'in_session', 'last_seen')
-	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_seen', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent', 'fcm_token')
+	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_seen', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent')
 
 	def get_languages(self, obj):
 		return ", ".join([l.name for l in obj.languages.all()])
