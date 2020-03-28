@@ -30,7 +30,7 @@ DEBUG = os.getenv('DEBUG', False)
 GITHUB_ACTIONS = os.getenv('GITHUB_ACTIONS')
 
 # default SECRET_KEY
-if (DEBUG or GITHUB_ACTIONS) and not SECRET_KEY:
+if GITHUB_ACTIONS and not SECRET_KEY:
     SECRET_KEY = 'x'
 
 # set SITE_ID to 1 for local development
