@@ -224,6 +224,7 @@ if service_account:
     cred = credentials.Certificate(json.loads(service_account))
     firebase_admin.initialize_app(cred)
 
+# set TEST_FCM_TOKEN to force all push notifications to go to your test device
 TEST_FCM_TOKEN = os.getenv('TEST_FCM_TOKEN')
 
 

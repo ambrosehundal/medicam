@@ -11,8 +11,7 @@ function initVideo(token, room, enableLocalVideo) {
 			if (publication.kind == "video") {
 				var track = publication.track;
 				var container = document.getElementById('local-media');
-				container.innerHTML = '';
-				container.appendChild(track.attach());
+				setChildNode(container, track.attach());
 			}
 		});
 
@@ -47,27 +46,37 @@ function updateConnectionStatus(room) {
 	}
 }
 
+function setChildNode(parent, newChild) {
+	var children = parent.childNodes;
+	for (var i in children) {
+		if (children.hasOwnProperty(i)) {
+			var child = children[i];
+			if (child.tagName == newChild.tagName) {
+				parent.removeChild(child);
+			}
+		}
+	}
+	parent.appendChild(newChild);
+}
+
 function handleParticipant(participant) {
 	var container = document.getElementById('remote-media');
 
 	participant.tracks.forEach(function(publication) {
 		if (publication.isSubscribed) {
 			var track = publication.track;
-			container.innerHTML = '';
-			container.appendChild(track.attach());
+			setChildNode(container, track.attach());
 		}
 	});
 
 	participant.on('trackSubscribed', function(track) {
-		container.innerHTML = '';
-		container.appendChild(track.attach());
+		setChildNode(container, track.attach());
 	});
 }
 
 function showPreview() {
 	Twilio.Video.createLocalVideoTrack().then(function(track) {
 		var container = document.getElementById('local-media');
-		container.innerHTML = '';
-		container.appendChild(track.attach());
+		setChildNode(container, track.attach());
 	});
 }
