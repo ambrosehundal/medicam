@@ -36,6 +36,12 @@ class DoctorAdmin(SiteAdmin):
 			list_filter += ('site',)
 		return list_filter
 
+	def get_exclude(self, request, obj=None):
+		if not request.user.is_superuser:
+			return ('email',)
+		else:
+			return ()
+
 class DisclaimerAdmin(SiteAdmin):
 	pass
 
