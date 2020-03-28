@@ -35,6 +35,9 @@ if (DEBUG or GITHUB_ACTIONS) and not SECRET_KEY:
 
 ALLOWED_HOSTS = ['localhost', '192.168.1.30', 'doc19.org', '.platform.doc19.org']
 
+# set to SITE_ID to 1 for local development
+SITE_ID = os.getenv('SITE_ID')
+
 
 # Application definition
 
