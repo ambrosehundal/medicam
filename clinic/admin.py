@@ -14,7 +14,7 @@ class SiteAdmin(admin.ModelAdmin):
 
 class DoctorAdmin(SiteAdmin):
 	list_display=('name', 'verified', 'get_languages', 'push_token', 'in_session', 'last_seen')
-	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_seen', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent', 'fcm_token')
+	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_seen', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent')
 
 	def get_languages(self, obj):
 		return ", ".join([l.name for l in obj.languages.all()])
@@ -35,6 +35,12 @@ class DoctorAdmin(SiteAdmin):
 		if request.user.is_superuser:
 			list_filter += ('site',)
 		return list_filter
+
+	def get_exclude(self, request, obj=None):
+		if not request.user.is_superuser:
+			return ('site', 'email', 'fcm_token')
+		else:
+			return ()
 
 class DisclaimerAdmin(SiteAdmin):
 	pass

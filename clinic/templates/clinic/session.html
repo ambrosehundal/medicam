@@ -20,9 +20,11 @@
 	    <div class="u-pull-right">
 		<form action="{% url 'finish' %}" method="post">
 		    {% csrf_token %}
-		    <input class="button" type="submit" value="{% trans "End Session" %}" name="end_session">
 		    {% if user_type == 'doctor' %}
+			<input class="button" type="submit" value="{% trans "Next Call" %}">
 			<input class="button" type="submit" value="{% trans "Stop Consulting" %}" name="stop_consulting">
+		    {% elif user_type == 'patient' %}
+			<input class="button" type="submit" value="{% trans "End Session" %}" name="end_session">
 		    {% endif %}
 		</form>
 	    </div>
@@ -41,5 +43,4 @@
      initVideo(data.token, data.room, data.enable_local_video);
      initChat();
     </script>
-
 {% endblock %}
