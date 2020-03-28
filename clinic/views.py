@@ -31,7 +31,7 @@ def primary_site_only(func):
 		if site.id == 1:
 			return func(request)
 		else:
-			return redirect('disclaimer')
+			return redirect('consultation')
 	return wrapper
 
 @primary_site_only
