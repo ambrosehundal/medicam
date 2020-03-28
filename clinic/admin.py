@@ -38,7 +38,7 @@ class DoctorAdmin(SiteAdmin):
 
 	def get_exclude(self, request, obj=None):
 		if not request.user.is_superuser:
-			return ('email',)
+			return ('site', 'email', 'fcm_token')
 		else:
 			return ()
 
