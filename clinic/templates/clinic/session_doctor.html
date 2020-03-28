@@ -20,7 +20,7 @@
     <div class="u-pull-right">
       <form action="{% url 'finish' %}" method="post">
         {% csrf_token %}
-        <input class="button" type="submit" value="{% trans "End Session" %}">
+        <input class="button" type="submit" value="{% trans "Next Call" %}">
       </form>
     </div>
     <span id="connection-status">{% trans "Connecting" %}...</span>
