@@ -52,6 +52,12 @@ VERIFICATION_PROBLEM_CHOICES=(
 	(4, "Other"),
 )
 
+PROVIDER_TYPE_CHOICES = (
+	(0, "Doctor"),
+	(1, "Nurse"),
+	(2, "Student")
+)
+
 class Doctor(Participant):
 	name = models.CharField(max_length=70, verbose_name=_("full name"))
 	email = models.EmailField(blank=True, null=True)
@@ -69,6 +75,7 @@ class Doctor(Participant):
 	user_agent = models.TextField(blank=True, null=True)
 	remarks = models.TextField(blank=True, verbose_name=_("anything to add?"))
 	utc_offset = models.IntegerField(default=0, verbose_name=_("UTC offset"))
+	provider_type = models.IntegerField(default=0, choices=PROVIDER_TYPE_CHOICES, verbose_name=_("Provider type"), help_text=_("Doctor, nurse or student"))
 
 	class Meta:
 		verbose_name = "provider"
