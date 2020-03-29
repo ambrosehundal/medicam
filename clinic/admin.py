@@ -13,7 +13,7 @@ class SiteAdmin(admin.ModelAdmin):
 		return qs
 
 class DoctorAdmin(SiteAdmin):
-	list_display=('name', 'verified', 'get_languages', 'push_token', 'in_session', 'last_seen')
+	list_display=('name', 'provider_type', 'verified', 'get_languages', 'push_token', 'in_session', 'last_seen')
 	readonly_fields=('access_url', 'credentials', 'utc_offset', 'last_seen', 'last_notified', 'self_certification_questions', 'remarks', 'in_session', 'ip_address', 'user_agent')
 
 	def get_languages(self, obj):
@@ -31,7 +31,7 @@ class DoctorAdmin(SiteAdmin):
 	access_url.short_description = "Access URL"
 
 	def get_list_filter(self, request):
-		list_filter = ('verified', 'languages')
+		list_filter = ('verified', 'languages', 'provider_type')
 		if request.user.is_superuser:
 			list_filter += ('site',)
 		return list_filter
