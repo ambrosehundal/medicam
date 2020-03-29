@@ -43,7 +43,7 @@ class DoctorAdmin(SiteAdmin):
 			return ()
 
 	def save_model(self, request, obj, form, change):
-		if not request.user.is_superuser and not obj.site:
+		if not request.user.is_superuser and not hasattr(obj, 'site'):
 			obj.site = get_current_site(request)
 		super().save_model(request, obj, form, change)
 
