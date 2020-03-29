@@ -53,9 +53,11 @@ VERIFICATION_PROBLEM_CHOICES=(
 )
 
 PROVIDER_TYPE_CHOICES = (
-	(0, "Doctor"),
-	(1, "Nurse"),
-	(2, "Student")
+	(0, "Unknown"),
+	(1, "Other"),
+	(2, "Doctor"),
+	(3, "Nurse"),
+	(4, "Student")
 )
 
 class Doctor(Participant):
