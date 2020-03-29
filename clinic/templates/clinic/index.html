@@ -41,28 +41,29 @@
       </ul>
     </div>
     <div class="five columns stock-photo">
-        <img src="{% static 'images/telemedicine.png' %}" width="250">
+      <img src="{% static 'images/telemedicine.png' %}" width="250">
     </div>
   </div>
 
   <div class="row start-buttons">
     <div class="one-half column start-button doctor">
       <a href="{% url 'volunteer' %}">
-	<h4>{% trans "Healthcare Professionals, Students, and Retirees" %}</h4>
-	<h5>{% trans "Click here to volunteer now" %}</h5>
-	<ol>
-	  <li>{% trans "Upload your credentials" %}</li>
-	  <li>{% trans "Select languages spoken" %}</li>
-	  <li>{% trans "Test your webcam" %}</li>
-	</ol>
+        <h4>{% trans "Healthcare Professionals, Students, and Retirees" %}</h4>
+        <h5>{% trans "Click here to volunteer now" %}</h5>
+        <ol>
+          <li>{% trans "Upload your credentials" %}</li>
+          <li>{% trans "Select languages spoken" %}</li>
+          <li>{% trans "Test your webcam" %}</li>
+        </ol>
       </a>
     </div>
+
     <div class="one-half column start-button patient">
       <a href="{% url 'disclaimer' %}">
-	<h4>{% trans "Need help with Coronavirus?" %}</h4>
-	<h5>{% trans "Click here to video chat with a volunteer" %}</h5>
-	<p>{% trans "It's free, and you don't need a camera or app." %}</p>
-	<p class="wait-time long">{% trans "There may be a long wait at the moment" %}</p>
+        <h4>{% trans "Need help with Coronavirus?" %}</h4>
+        <h5>{% trans "Click here to video chat with a volunteer" %}</h5>
+        <p>{% trans "It's free, and you don't need a camera or app." %}</p>
+        <p class="wait-time long">{% trans "There may be a long wait at the moment" %}</p>
       </a>
     </div>
   </div>
