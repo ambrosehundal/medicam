@@ -16,7 +16,7 @@ First run a virtualenv using `virtualenv .venv && source .venv/bin/activate`
 
 Install Python dependencies using `pip install -r requirements.txt`
 
-Make sure that `DEBUG`, `SECRET_KEY`, `DATABASE_URL` and `SITE_ID` are set as environment variables.
+Make sure that `DJANGO_SETTINGS_MODULE`, `DEBUG`, `SECRET_KEY`, `DATABASE_URL` and `SITE_ID` are set as environment variables.
 
 The easiest way to run the app is utilizing [heroku-cli].
 
