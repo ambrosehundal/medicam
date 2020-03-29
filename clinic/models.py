@@ -8,8 +8,6 @@ from django.utils.translation import gettext as _
 import os, uuid
 from datetime import datetime, timedelta
 
-DEFAULT_SITE_ID=getattr(settings, 'SITE_ID', None) or 1
-
 class Participant(models.Model):
 	uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 	created = models.DateTimeField(auto_now_add=True)
@@ -17,7 +15,7 @@ class Participant(models.Model):
 	last_seen = models.DateTimeField(blank=True, null=True)
 	ip_address = models.GenericIPAddressField(blank=True, null=True, verbose_name=_("IP address"))
 	twilio_jwt = models.TextField(blank=True, null=True, editable=False)
-	site = models.ForeignKey(Site, on_delete=models.CASCADE, default=DEFAULT_SITE_ID)
+	site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
 	class Meta:
  		abstract = True
