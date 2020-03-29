@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 from django.utils.translation import gettext_lazy as _
 import dj_database_url
 import json, os
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='./.env')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -233,9 +235,11 @@ TEST_FCM_TOKEN = os.getenv('TEST_FCM_TOKEN')
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-if not DEBUG:
+if DEBUG not in ['1', 1, 'true', 'True', True]:
     sentry_sdk.init(
         dsn="https://b044df58ab5d4c94b761f0550c97c6a1@sentry.io/5178154",
         integrations=[DjangoIntegration()],
         send_default_pii=False
     )
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
