@@ -11,3 +11,4 @@ sentry-sdk
 social-auth-app-django
 twilio
 whitenoise
+python-dotenv
