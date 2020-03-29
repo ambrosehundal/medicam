@@ -184,3 +184,4 @@ class VolunteerUpdate(models.Model):
 	"Updates to be shown on the Volunteer Homepage if they are active."
 	active = models.BooleanField(default=False)
 	message = models.TextField()
+	timestamp = models.DateTimeField(auto_now_add=True)

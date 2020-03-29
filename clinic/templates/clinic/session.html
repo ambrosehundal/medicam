@@ -12,29 +12,29 @@
 {% block content %}
 
     <div class="container session {{ user_type }}">
-	<div class="row top">
-	    <h2>{{ request.site.name }}</h2>
-	</div>
+        <div class="row top">
+            <h2>{{ request.site.name }}</h2>
+        </div>
 
-	<div class="row">
-	    <div class="u-pull-right">
-		<form action="{% url 'finish' %}" method="post">
-		    {% csrf_token %}
-		    {% if user_type == 'doctor' %}
-			<input class="button" type="submit" value="{% trans "Next Call" %}">
-			<input class="button" type="submit" value="{% trans "Stop Consulting" %}" name="stop_consulting">
-		    {% elif user_type == 'patient' %}
-			<input class="button" type="submit" value="{% trans "End Session" %}" name="end_session">
-		    {% endif %}
-		</form>
-	    </div>
-	    {% if user_type == 'patient' %}
-		<span>{% trans "In session with" %} <b>{{ doctor.name }}</b> &bull;</span>
-	    {% endif %}
-	    <span id="connection-status">{% trans "Connecting" %}...</span>
-	</div>
+        <div class="row">
+            <div class="u-pull-right">
+                <form action="{% url 'finish' %}" method="post">
+                    {% csrf_token %}
+                    {% if user_type == 'doctor' %}
+                        <input class="button" type="submit" value="{% trans "Next Call" %}">
+                        <input class="button" type="submit" value="{% trans "Stop Consulting" %}" name="stop_consulting">
+                    {% elif user_type == 'patient' %}
+                        <input class="button" type="submit" value="{% trans "End Session" %}" name="end_session">
+                    {% endif %}
+                </form>
+            </div>
+            {% if user_type == 'patient' %}
+                <span>{% trans "In session with" %} <b>{{ doctor.name }}</b> &bull;</span>
+            {% endif %}
+            <span id="connection-status">{% trans "Connecting" %}...</span>
+        </div>
 
-	{% include "clinic/session_ui.html" %}
+        {% include "clinic/session_ui.html" %}
     </div>
 
     {{ video_data|json_script:"video-data" }}

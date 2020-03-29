@@ -62,12 +62,12 @@
 	{% if doctor_id %}
 	    <div class="row how-it-works">
 		<div class="four columns wait-for-calls">
-		    <a href="{% url 'disclaimer' %}" class="block">
-			<img src="{% static 'images/volunteer.png' %}" width="100" class="u-pull-right">
-			<h4>{% trans "You are a Registered Volunteer!" %}</h4>
-			<h5>{% trans "Click here to start waiting for patient calls" %}</h5>
-		    </a>
-		</div>
+		    <a href="{% url 'consultation' %}" class="block">
+                        <img src="{% static 'images/volunteer.png' %}" width="100" class="u-pull-right">
+                        <h4>{% trans "You are a Registered Volunteer!" %}</h4>
+                        <h5>{% trans "Click here to start waiting for patient calls" %}</h5>
+                    </a>
+                </div>
 		<div class="four columns">
 		    <img src="{% static 'images/wait.png' %}" width="110" class="u-pull-right">
 		    <h5>{% trans "Wait" %}</h5>
