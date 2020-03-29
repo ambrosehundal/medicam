@@ -12,11 +12,11 @@ https://doc19.org is a COVID-19 telehealth clinic, built on Django and Twilio.
 You can use [asdf] to manage your environment versions.
 
 ## Running the App
-First run a virtualenv using `virtualenv .venv && source .venv/bin/activate`
+Create a virtualenv using `virtualenv .venv && source .venv/bin/activate`
 
 Install Python dependencies using `pip install -r requirements.txt`
 
-Make sure that `DJANGO_SETTINGS_MODULE`, `DEBUG`, `SECRET_KEY`, `DATABASE_URL` and `SITE_ID` are set as environment variables.
+Make sure that `DEBUG`, `SECRET_KEY`, `SITE_ID` and `DATABASE_URL` are set as environment variables.
 
 The easiest way to run the app is utilizing [heroku-cli].
 

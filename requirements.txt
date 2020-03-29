@@ -6,7 +6,7 @@ django-storages
 django-widget-tweaks
 firebase-admin
 gunicorn
-psycopg2
+psycopg2-binary
 sentry-sdk
 social-auth-app-django
 twilio
