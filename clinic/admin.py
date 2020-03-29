@@ -1,7 +1,12 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from smtplib import SMTPException
+import logging
+
+logger = logging.getLogger('clinic')
 
 from clinic.models import *
 
@@ -41,6 +46,22 @@ class DoctorAdmin(SiteAdmin):
 			return ('site', 'email', 'fcm_token')
 		else:
 			return ()
+
+	def save_model(self, request, obj, form, change):
+		if 'verified' in form.changed_data and obj.verified is True:
+			try:
+				send_mail(
+					'Your doc19.org provider application has been approved!',
+					f'Congratulations {obj.name}!\nYour consultation URL is https://{request.get_host()}{self.access_url(obj)}',
+					'contact@doc19.org',
+					[obj.email]
+				)
+				messages.success(request, f"An approval email has been sent to {obj.email}")
+			except SMTPException as err:
+				logger.info(err)
+				messages.error(request, f"Error. Could not send an approval email to {obj.email} - {str(err)}")
+				return
+		return super().save_model(request, obj, form, change)
 
 class DisclaimerAdmin(SiteAdmin):
 	pass
