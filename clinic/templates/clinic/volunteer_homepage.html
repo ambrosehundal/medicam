@@ -1,0 +1,121 @@
+{% extends "clinic/base.html" %}
+{% load i18n static %}
+
+{% block content %}
+
+    <div class="container intro">
+
+	<div class="row top">
+	    <div class="nine columns">
+		<h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+	    </div>
+	    <div class="three columns language">
+		<form action="{% url 'set_language' %}" method="post">
+		    {% csrf_token %}
+		    <input name="next" type="hidden" value="{% url 'index' %}">
+		    {% trans "Language" %}:
+		    <select name="language" onchange="this.form.submit()">
+			{% get_current_language as LANGUAGE_CODE %}
+			{% get_available_languages as LANGUAGES %}
+			{% get_language_info_list for LANGUAGES as languages %}
+			{% for language in languages %}
+			    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+				{{ language.name_local }}
+			    </option>
+			{% endfor %}
+		    </select>
+		</form>
+	    </div>
+	</div>
+
+	{% if updates %}
+	    <div class="row volunteer-updates">
+		<div class="twelve column">
+		    <big><b>Volunteer Updates:</b></big>
+		    <ul>
+			{% for update in updates %}
+			    <li>
+				{{ update.message }}
+			    </li>
+			{% endfor %}
+		    </ul>
+		</div>
+	    </div>
+	{% endif %}
+
+	<div class="row intro">
+	    <div class="seven columns">
+		<p>
+		    {% trans "Thank you for volunteering! Resources you may find useful:" %}
+		</p>
+		<ul>
+		    <li><a href="{% url 'faq' %}">Find answers for frequently asked questions about COVID-19.</a></li>
+		    <li><a href="{% url 'landing_doctor' %}">See how it works for volunteers.</a></li>
+		    <li><a href="{% url 'landing_org' %}"><b>New:</b> Our platform is available for clinics and other community organizations.</a></li>
+		</ul>
+	    </div>
+	    <div class="five columns stock-photo">
+		<img src="{% static 'images/telemedicine2.jpg' %}" width="300" class="pull-right">
+	    </div>
+	</div>
+
+	{% if doctor_id %}
+	    <div class="row how-it-works">
+		<div class="four columns wait-for-calls">
+		    <a href="{% url 'disclaimer' %}" class="block">
+			<img src="{% static 'images/volunteer.png' %}" width="100" class="u-pull-right">
+			<h4>{% trans "You are a Registered Volunteer!" %}</h4>
+			<h5>{% trans "Click here to start waiting for patient calls" %}</h5>
+		    </a>
+		</div>
+		<div class="four columns">
+		    <img src="{% static 'images/wait.png' %}" width="110" class="u-pull-right">
+		    <h5>{% trans "Wait" %}</h5>
+		    <big>{% trans "Come back to the site when someone is waiting for help." %}</big>
+		    <p>{% trans "We can send you a notification when a call is waiting." %}</p>
+		    <p>{% trans "You choose the frequency and timing of notifications." %}</p>
+		</div>
+		<div class="four columns">
+		    <img src="{% static 'images/telemedicine.png' %}" width="120" class="u-pull-right">
+		    <h5>{% trans "Triage" %}</h5>
+		    <big>{% trans "Help direct callers to the appropriate resources." %}</big>
+		    <p>{% trans "By giving callers a way to get answers without leaving their homes, you're directly helping to &ldquo;flatten the curve.&rdquo;" %}</p>
+		</div>
+	    </div>
+	{% else %}
+	    <div class="row start-buttons">
+		<div class="one-half column start-button doctor">
+		    <a href="{% url 'volunteer' %}">
+			<h4>{% trans "Healthcare Professionals, Students, and Retirees" %}</h4>
+			<h5>{% trans "Click here to volunteer now" %}</h5>
+			<ol>
+			    <li>{% trans "Upload your credentials" %}</li>
+			    <li>{% trans "Select languages spoken" %}</li>
+			    <li>{% trans "Test your webcam" %}</li>
+			</ol>
+		    </a>
+		</div>
+		<div class="one-half column start-button patient">
+		    <a href="{% url 'disclaimer' %}">
+			<h4>{% trans "Need help with Coronavirus?" %}</h4>
+			<h5>{% trans "Click here to video chat with a volunteer" %}</h5>
+			<p>{% trans "It's free, and you don't need a camera or app." %}</p>
+			<p class="wait-time long">{% trans "There may be a long wait at the moment" %}</p>
+		    </a>
+		</div>
+	    </div>
+	{% endif %}
+
+	<div class="row footer">
+	    <div class="eight columns call-to-arms">{% trans "Development help is urgently needed!" %}<br>
+		<a href="https://helpwithcovid.com/projects/147">{% trans "Volunteer on" %} &lsquo;Help With COVID&rsquo;</a>, <a href="https://discord.gg/CqeH4wA">{% trans "join us in #online-clinic on Discord" %}</a>, {% trans "or" %} <a href="mailto:contact@doc19.org">{% trans "email us" %}</a>
+	    </div>
+	    <div class="four columns terms">
+		<a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> &bull;
+		<a href="{% url 'terms' %}">{% trans "Terms of Use" %}</a>
+	    </div>
+	</div>
+
+    </div>
+
+{% endblock %}

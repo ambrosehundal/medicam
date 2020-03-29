@@ -44,10 +44,6 @@ h2 a {
 	background-color: #f5f7ff;
 }
 
-.start-button.registered-doctor {
-	border: 5px solid #4b4;
-}
-
 .row.top, .row.footer, .row.self-cert {
 	margin-top: 20px;
 }
@@ -225,6 +221,17 @@ ul.errorlist li {
 	margin-bottom: 20px;
 	padding: 10px;
 	border: 3px solid #6767c7;
+	border-radius: 5px;
+}
+
+.intro .how-it-works .columns.wait-for-calls {
+	border: 5px solid #4b4;
+}
+
+.row.volunteer-updates {
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 5px solid #d21;
 	border-radius: 5px;
 }
 

@@ -178,3 +178,9 @@ class Disclaimer(models.Model):
 
 	def __str__(self):
 		return str(self.site)
+
+
+class VolunteerUpdate(models.Model):
+	"Updates to be shown on the Volunteer Homepage if they are active."
+	active = models.BooleanField(default=False)
+	message = models.TextField()

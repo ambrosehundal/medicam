@@ -12,7 +12,15 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
 from clinic.forms import FeedbackForm, OrgRequestForm, VolunteerForm
-from clinic.models import ChatMessage, Disclaimer, Doctor, Language, Patient, SelfCertificationQuestion
+from clinic.models import (
+	ChatMessage,
+	Disclaimer,
+	Doctor,
+	Language,
+	Patient,
+	SelfCertificationQuestion,
+	VolunteerUpdate,
+)
 from clinic.models import PATIENT_OFFLINE_AFTER
 
 from firebase_admin import messaging
@@ -36,9 +44,20 @@ def primary_site_only(func):
 
 @primary_site_only
 def index(request):
-	return render(request, 'clinic/index.html', {
-		'doctor_id': request.COOKIES.get('doctor_id')}
-	)
+	doctor_id = request.COOKIES.get('doctor_id')
+	if doctor_id:
+		return volunteer_homepage(request)
+	else:
+		return render(request, 'clinic/index.html')
+
+
+@primary_site_only
+def volunteer_homepage(request):
+	return render(request, 'clinic/volunteer_homepage.html', {
+		'doctor_id': request.COOKIES.get('doctor_id'),
+		'updates': VolunteerUpdate.objects.filter(active=True),
+	})
+
 
 @primary_site_only
 def volunteer(request):
