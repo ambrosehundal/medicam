@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 from django.utils.translation import gettext_lazy as _
 import dj_database_url
 import json, os
+
 from dotenv import load_dotenv
 load_dotenv(dotenv_path='./.env')
 
@@ -33,9 +34,6 @@ if GITHUB_ACTIONS and not SECRET_KEY:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False)
-
-# set SITE_ID to 1 for local development
-SITE_ID = os.getenv('SITE_ID')
 
 
 # Application definition
@@ -94,6 +92,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'medicam.wsgi.application'
 
 ALLOWED_HOSTS = ['localhost', 'doc19.org', '.platform.doc19.org']
+
+# set SITE_ID to 1 for local development
+SITE_ID = os.getenv('SITE_ID')
 
 
 # Database

@@ -1,15 +1,16 @@
+import logging
+from smtplib import SMTPException
+
 from django.contrib import admin, messages
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from smtplib import SMTPException
-import logging
-
-logger = logging.getLogger('clinic')
 
 from clinic.models import *
+
+logger = logging.getLogger(__name__)
 
 class SiteAdmin(admin.ModelAdmin):
 	def get_queryset(self, request):
@@ -62,8 +63,8 @@ class DoctorAdmin(SiteAdmin):
 					msg_plain = render_to_string('clinic/provider_approval_email.txt', context)
 					msg_html = render_to_string('clinic/provider_approval_email.html', context)
 					send_mail(
-						'Your doc19.org provider application has been approved!',
-						f'Congratulations {obj.name}!\nYour consultation URL is https://{request.get_host()}{self.access_url(obj)}',
+						'Welcome to doc19.org!',
+						msg_plain,
 						'contact@doc19.org',
 						[obj.email],
 						html_message=msg_html

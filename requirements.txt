@@ -7,8 +7,8 @@ django-widget-tweaks
 firebase-admin
 gunicorn
 psycopg2-binary
+python-dotenv
 sentry-sdk
 social-auth-app-django
 twilio
 whitenoise
-python-dotenv
