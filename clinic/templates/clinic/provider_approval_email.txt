@@ -1,0 +1,2 @@
+Congratulations {{ provider_name }}!
+Your access URL is {{ provider_access_url }}.
