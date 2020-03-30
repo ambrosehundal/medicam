@@ -50,19 +50,14 @@ def index(request):
 	else:
 		return render(request, 'clinic/index.html')
 
-
 @primary_site_only
 def volunteer_homepage(request):
 	return render(request, 'clinic/volunteer_homepage.html', {
-		'doctor_id': request.COOKIES.get('doctor_id'),
 		'updates': VolunteerUpdate.objects.filter(active=True),
 	})
 
-
 @primary_site_only
 def volunteer(request):
-	site = get_current_site(request)
-
 	if request.method == 'POST':
 		form = VolunteerForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -232,6 +227,7 @@ def finish(request):
 
 	doctor_id = request.COOKIES.get('doctor_id')
 	patient_id = request.COOKIES.get('patient_id')
+
 	if doctor_id:
 		try:
 			doctor = Doctor.objects.get(uuid=doctor_id)

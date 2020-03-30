@@ -7,7 +7,7 @@ from clinic.models import *
 
 class SiteAdmin(admin.ModelAdmin):
 	def get_queryset(self, request):
-		qs = super(SiteAdmin, self).get_queryset(request)
+		qs = super().get_queryset(request)
 		if not request.user.is_superuser:
 			qs = qs.filter(site=get_current_site(request))
 		return qs
@@ -48,7 +48,11 @@ class DoctorAdmin(SiteAdmin):
 		super().save_model(request, obj, form, change)
 
 class DisclaimerAdmin(SiteAdmin):
-	pass
+	def get_exclude(self, request, obj=None):
+		if not request.user.is_superuser:
+			return ('site',)
+		else:
+			return ()
 
 class PatientAdmin(SiteAdmin):
 	list_display=('id', 'language', 'doctor', 'session_started', 'wait_duration', 'online')
