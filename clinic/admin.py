@@ -65,7 +65,7 @@ class DoctorAdmin(SiteAdmin):
 					send_mail(
 						'Welcome to doc19.org!',
 						msg_plain,
-						'contact@doc19.org',
+						'doc19.org team <contact@doc19.org>',
 						[obj.email],
 						html_message=msg_html
 					)

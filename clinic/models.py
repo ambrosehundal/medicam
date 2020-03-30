@@ -78,7 +78,7 @@ class Doctor(Participant):
 	user_agent = models.TextField(blank=True, null=True)
 	remarks = models.TextField(blank=True, verbose_name=_("anything to add?"))
 	utc_offset = models.IntegerField(default=0, verbose_name=_("UTC offset"))
-	provider_type = models.IntegerField(default=0, choices=PROVIDER_TYPE_CHOICES, verbose_name=_("Provider type"), help_text=_("Doctor, nurse or student"))
+	provider_type = models.IntegerField(default=0, choices=PROVIDER_TYPE_CHOICES, verbose_name=_("provider type"), help_text=_("Doctor, nurse or student"))
 
 	class Meta:
 		verbose_name = "provider"
