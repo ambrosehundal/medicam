@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -51,11 +52,18 @@ class DoctorAdmin(SiteAdmin):
 		if 'verified' in form.changed_data and obj.verified is True:
 			if obj.email:
 				try:
+					context = {
+						'provider_name': obj.name,
+						'provider_access_url': f'https://{request.get_host()}{self.access_url(obj)}'
+					}
+					msg_plain = render_to_string('clinic/provider_approval_email.txt', context)
+					msg_html = render_to_string('clinic/provider_approval_email.html', context)
 					send_mail(
 						'Your doc19.org provider application has been approved!',
 						f'Congratulations {obj.name}!\nYour consultation URL is https://{request.get_host()}{self.access_url(obj)}',
 						'contact@doc19.org',
-						[obj.email]
+						[obj.email],
+						html_message=msg_html
 					)
 					messages.success(request, f"An approval email has been sent to {obj.email}")
 				except SMTPException as err:
