@@ -62,7 +62,7 @@ PROVIDER_TYPE_CHOICES = (
 
 class Doctor(Participant):
 	name = models.CharField(max_length=70, verbose_name=_("full name"))
-	email = models.EmailField(blank=True, null=True)
+	email = models.EmailField()
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
 	verified = models.BooleanField(default=False, verbose_name=_("approved"), help_text=_("Allows the provider to receive calls."))
 	verification_problem = models.PositiveIntegerField(default=0, choices=VERIFICATION_PROBLEM_CHOICES, verbose_name=_("reason for non-approval"), help_text=_("Set this if the provider cannot be approved."))
