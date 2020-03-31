@@ -74,7 +74,7 @@ def volunteer(request):
 		form = VolunteerForm()
 		form.fields['self_certification_questions'].queryset = SelfCertificationQuestion.objects.filter(language=request.LANGUAGE_CODE)
 
-	return render(request, 'clinic/volunteer.html', {'form': form})
+	return render(request, 'clinic/volunteer_form.html', {'form': form})
 
 def disclaimer(request):
 	patient_id = request.COOKIES.get('patient_id')

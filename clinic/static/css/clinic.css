@@ -130,6 +130,7 @@ ul.errorlist li {
 	.row.intro p {
 		font-size: 1.1em;
 	}
+
 	.row.intro .stock-photo {
 		text-align: right;
 	}
@@ -289,4 +290,14 @@ p.pull-quote {
 	padding-left: 20px;
 	font-size: 1.1em;
 	border-left: 3px solid #ddd;
+}
+
+@media (min-width: 500px) {
+	.container .start-buttons {
+		display: flex;
+	}
+
+	.container .start-buttons .column {
+		flex: 1;
+	}
 }
