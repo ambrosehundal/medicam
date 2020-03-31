@@ -46,14 +46,7 @@
 </head>
 <body>
 
-{% block banner %}
-  {% if request.site.id == 1 %}
-    <div class="banner">
-      <h5>{% trans "Call for Volunteers" %}</h5>
-      <p><b>{% trans "We are accepting volunteer applications and scaling up as quickly as possible." %}</b> {% trans "There may be a long wait to connect with a volunteer." %}</p>
-    </div>
-  {% endif %}
-{% endblock %}
+{% block banner %}{% endblock %}
 
 {% block content %}
 {% endblock %}
