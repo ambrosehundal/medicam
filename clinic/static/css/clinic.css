@@ -122,6 +122,12 @@ ul.errorlist li {
 	max-width: 300px;
 }
 
+@media (max-width: 500px) {
+	.volunteer #local-media video, #local-media.preview video {
+		max-width: 250px;
+	}
+}
+
 .footer .columns, .row.intro {
 	margin-bottom: 15px;
 }
