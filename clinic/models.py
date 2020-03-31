@@ -131,7 +131,7 @@ FEEDBACK_CHOICES=(
 	(2, "No, there was a problem with the volunteer")
 )
 
-PATIENT_OFFLINE_AFTER=timedelta(minutes=1)
+PATIENT_OFFLINE_AFTER=timedelta(seconds=25)
 
 class Patient(Participant):
 	language = models.ForeignKey(Language, models.PROTECT)

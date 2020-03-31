@@ -12,6 +12,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
 from clinic.forms import FeedbackForm, OrgRequestForm, VolunteerForm
+from clinic.models import PATIENT_OFFLINE_AFTER
 from clinic.models import (
 	ChatMessage,
 	Disclaimer,
@@ -21,7 +22,6 @@ from clinic.models import (
 	SelfCertificationQuestion,
 	VolunteerUpdate,
 )
-from clinic.models import PATIENT_OFFLINE_AFTER
 
 from firebase_admin import messaging
 from ipware import get_client_ip
@@ -53,7 +53,7 @@ def index(request):
 @primary_site_only
 def volunteer_homepage(request):
 	return render(request, 'clinic/volunteer_homepage.html', {
-		'updates': VolunteerUpdate.objects.filter(active=True),
+		'updates': VolunteerUpdate.objects.filter(active=True).order_by('-timestamp'),
 	})
 
 @primary_site_only
@@ -157,6 +157,7 @@ def consultation_doctor(request, doctor):
 			'token': doctor.twilio_jwt,
 			'room': str(doctor.patient.uuid),
 			'enable_local_video': True,
+			'user_type': 'doctor',
 		},
 	})
 
@@ -216,6 +217,7 @@ def consultation_patient(request, patient):
 				'token': patient.twilio_jwt,
 				'room': str(patient.uuid),
 				'enable_local_video': patient.enable_video,
+				'user_type': 'patient',
 			},
 		})
 

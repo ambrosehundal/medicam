@@ -1,4 +1,18 @@
-function initVideo(token, room, enableLocalVideo) {
+var videoConnected = false;
+
+function initVideo(token, room, enableLocalVideo, userType) {
+	setTimeout(function() {
+		if (!videoConnected) {
+			console.error("Connection not established after 45 seconds");
+			var status = document.getElementById('connection-status');
+			if (userType == 'doctor') {
+				status.innerText = "The caller dropped off. Try another call.";
+			} else {
+				status.innerText = "Call failed. Please try again.";
+			}
+		}
+	}, 45000);
+
 	Twilio.Video.connect(token, {
 		name: room,
 		audio: true,
@@ -8,7 +22,7 @@ function initVideo(token, room, enableLocalVideo) {
 		console.log("Successfully joined a Room", room);
 
 		room.localParticipant.tracks.forEach(function(publication) {
-			if (publication.kind == "video") {
+			if (publication.kind == 'video') {
 				var track = publication.track;
 				var container = document.getElementById('local-media');
 				setChildNode(container, track.attach());
@@ -34,12 +48,13 @@ function initVideo(token, room, enableLocalVideo) {
 
 	}, function(error) {
 		console.error("Unable to connect to Room", error.message);
-		document.getElementById('connection-status').innerText = "Error";
+		document.getElementById('connection-status').innerText = "Call failed. Please try again.";
 	});
 }
 
 function updateConnectionStatus(room) {
 	if (room.participants.size > 0) {
+		videoConnected = true;
 		document.getElementById('connection-status').innerText = "Connected";
 	} else {
 		document.getElementById('connection-status').innerText = "Disconnected";
