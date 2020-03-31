@@ -118,7 +118,7 @@ ul.errorlist li {
 	max-width: 100%;
 }
 
-.volunteer #local-media video {
+.volunteer #local-media video, #local-media.preview video {
 	max-width: 300px;
 }
 
@@ -277,7 +277,7 @@ div.chat li .time {
 }
 
 .disclaimer .button-primary {
-	margin-top: 10px;
+	margin-top: 15px;
 }
 
 .faq ul.contents li {
