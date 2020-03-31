@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<div class="row footer">
+  <div class="seven columns call-to-arms">{% trans "Development help is urgently needed!" %}<br>
+    <a href="https://helpwithcovid.com/projects/147">{% trans "Volunteer on" %} &lsquo;Help With COVID&rsquo;</a>, <a href="https://discord.gg/CqeH4wA">{% trans "join #online-clinic on Discord" %}</a>, {% trans "or" %} <a href="mailto:contact@doc19.org">{% trans "email us" %}</a>
+  </div>
+  <div class="five columns terms">
+    <a href="https://www.facebook.com/doc19.org/">Facebook</a> &bull;
+    <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> &bull;
+    <a href="{% url 'terms' %}">{% trans "Terms of Use" %}</a>
+  </div>
+</div>
