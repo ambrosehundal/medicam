@@ -2,7 +2,7 @@ Welcome, {{ provider_name }}! Your volunteer application was approved.
 
 Use this link to sign in and start accepting video calls: {{ provider_access_url }}
 
-Our homepage has more information for volunteers, with further guidance coming very soon: https://doc19.org
+Our homepage has more information and guidance for volunteers: https://doc19.org
 
 Best regards,
 the doc19.org team
