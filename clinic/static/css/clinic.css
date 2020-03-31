@@ -279,3 +279,14 @@ div.chat li .time {
 .disclaimer .button-primary {
 	margin-top: 10px;
 }
+
+.faq ul.contents li {
+	margin-bottom: 5px;
+}
+
+p.pull-quote {
+	margin-left: 20px;
+	padding-left: 20px;
+	font-size: 1.1em;
+	border-left: 3px solid #ddd;
+}

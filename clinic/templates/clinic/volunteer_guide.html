@@ -1,0 +1,142 @@
+{% extends "clinic/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Volunteer Guidance" %}{% endblock %}
+
+{% block content %}
+
+<div class="container faq">
+  <div class="row top">
+    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+    <h4>{% trans "Volunteer Guidance" %}</h4>
+  </div>
+
+  <div class="row">
+    <a id="contents"></a>
+    <ul class="contents">
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#how-to-introduce-yourself">How to introduce yourself</a></li>
+      <li>
+        <a href="#if-you-are-asked-about">If you are asked about...</a>
+        <ul>
+          <li><a href="#symptoms">Symptoms</a></li>
+          <li><a href="#emotional-support">Emotional support</a></li>
+          <li><a href="#information-about-covid19">Information about COVID-19</a></li>
+          <li><a href="#how-do-i-protect-myself">How do I protect myself?</a></li>
+          <li><a href="#how-do-i-protect-others">How do I protect others?</a></li>
+        </ul>
+      </li>
+      <li><a href="#further-resources">Further resources</a></li>
+    </ul>
+
+    <a id="introduction"></a>
+    <h4>Introduction</h4>
+    <p>Thank you and welcome to <a href="https://doc19.org">doc19.org</a>, a website that was created to help connect those who need help during the COVID-19 crisis with volunteers who are willing to listen and give a hand. Your help is much appreciated. This guide was created to help orient you to your role as a volunteer. It's still a work in progress, so please <a href="mailto:contact@doc19.org">let us know</a> if you have feedback.</p>
+    <p>Please familiarize yourself with the entire guide, including associated information and resources, to be better prepared to answer questions.</p>
+    <p>Volunteers may provide the following services:</p>
+    <ul>
+      <li>Triage</li>
+      <li>Emotional support</li>
+      <li>Referral to official resources</li>
+    </ul>
+    <p>For liability reasons, we ask that you do not to give individual medical advice. Ensure that callers are aware of this before you proceed.</p>
+    <p>We recommend the following resources:</p>
+    <ul>
+      <li>US: <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">CDC Coronavirus Self-Checker</a></li>
+      <li>Canada: <a href="https://www.canada.ca/en/public-health/services/diseases/coronavirus-disease-covid-19.html">Government of Canada Coronavirus website</a></li>
+      <li>UK: <a href="https://www.nhs.uk/conditions/coronavirus-covid-19/">NHS Coronavirus advice</a></li>
+    </ul>
+    <p>Everything you say is your responsibility. We cannot be held responsible for information provided to callers.</p>
+    <p>How you approach calls is left up to your judgement. In the next section, we'll set out some suggestions for introducing yourself.</p>
+
+    <a id="how-to-introduce-yourself"></a>
+    <h4>How to introduce yourself</h4>
+    <p>You can say:</p>
+    <p class="pull-quote">
+      Hi there, I'm [name]. I'm here to help you today as a volunteer. [Before we continue, I would like to let you know that I am not a licensed medical professional.] I can provide you with information in order to help you make a well-informed decision. However, I can't offer medical advice.
+    </p>
+    <p>Or:</p>
+    <p class="pull-quote">
+      Hello, my name is [name] and I am a volunteer. [Before we proceed, I would like to let you know that I'm not yet a licensed medical professional.] I'm here to provide you with information in order to help you make a well-informed decision; but please be aware that I can't offer medical advice.
+    </p>
+    <p>If the caller agrees to proceed:</p>
+    <p class="pull-quote">
+      Which country do you currently live in?
+    </p>
+    <ul>
+      <li>If US/Canada, follow respective websites and resources.</li>
+      <li>If from elsewhere, follow CDC guidance but be aware that self-checker is intended for people currently located in the US.</li>
+    </ul>
+    <p>Follow up with:</p>
+    <p class="pull-quote">
+      How can I help you today?
+    </p>
+
+    <a id="if-you-are-asked-about"></a>
+    <h4>If you are asked about...</h4>
+
+    <a id="symptoms"></a>
+    <h5>Symptoms</h5>
+    <p class="pull-quote">
+      I'm going to walk you through the tool provided by [public health authority] for the Coronavirus. Just note that this tool is not intended for diagnosis or treatment of disease, including COVID-19, as that judgment must be left up to your healthcare provider. Can we begin?
+    </p>
+    <p>If <b>yes</b>: ask the questions from the tool. If <b>no</b>: give them the link to the tool.</p>
+
+    <a id="emotional-support"></a>
+    <h5>Emotional support</h5>
+    <p>Your role is best served by identifying the problem that the caller has, not to offer personal advice on solving the problem.</p>
+    <p>If a caller is suicidal, keep them online, and have them call the National Suicide Hotline: 1-800-273-8255 (US)</p>
+    <p>
+      What you should do:
+      <ul>
+        <li>Make sure you compliment them (You're so strong for talking about this.)</li>
+        <li>Make sure you empathize (I can see how that would make you feel, I’m sorry that that happened)</li>
+        <li>Listen!</li>
+      </ul>
+      If you can identify a problem that you think can be addressed with a resource, then offer the resource.
+    </p>
+
+    <a id="information-about-covid19"></a>
+    <h5>Information about COVID-19</h5>
+    <p>Familiarize yourself with our <a href="{% url 'faq' %}">frequently asked questions</a> page. If you don't know the answer to an question, please direct the caller to one of the official resources. You can also help them search for the information they need.</p>
+    <p>COVID-19 is a highly contagious viral infection that transmits airborne, through sneezing, coughing, or contact with shared surfaces. People who develop an infection typically do after 2-14 days after contact with an infected individual. Common symptoms are fever, cough, or shortness of breath.</p>
+    <p>Right now, it's important not to travel unless absolutely necessary. When going out, practice social distancing and stand at least 6 feet away from people. If someone is sick and must go outside, they should wear a face mask.</p>
+
+    <a id="how-do-i-protect-myself"></a>
+    <h5>How do I protect myself?</h5>
+    <ol>
+      <li>Wash your hands often</li>
+      <li>Don't touch your face and mouth</li>
+      <li>Avoid close contact with people</li>
+    </ol>
+
+    <a id="how-do-i-protect-others"></a>
+    <h5>How do I protect others?</h5>
+    <ol>
+      <li>Stay home if you're sick, unless you need medical care</li>
+      <li>Cover your coughs and sneezes</li>
+      <li>When you're sick, wear a mask if you must be around people</li>
+      <li>Clean and disinfect commonly shared surfaces</li>
+    </ol>
+
+    <p>For more information about self-protection and protecting others, these resources may be helpful:</p>
+    <ul>
+      <li>US: <a href="US: https://www.cdc.gov/coronavirus/2019-ncov/prevent-getting-sick/prevention.html">https://www.cdc.gov/coronavirus/2019-ncov/prevent-getting-sick/prevention.html</a></li>
+      <li>Canada: <a href="https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection/prevention-risks.html?topic=tilelink">https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection/prevention-risks.html</a></li>
+    </ul>
+
+    <a id="further-resources"></a>
+    <h4>Further resources</h4>
+    </p><b>(US)</b> The National Alliance on Mental Illness produced a <a href="https://www.nami.org/getattachment/About-NAMI/NAMI-News/2020/NAMI-Updates-on-the-Coronavirus/COVID-19-Updated-Guide-1.pdf">Resource Guide</a> for those seeking help. Topics include:</p>
+    <ol>
+      <li>Mental, social support</li>
+      <li>Problems with getting care due to insurance problems</li>
+      <li>Homelessness</li>
+      <li>Other problems</li>
+    </ol>
+    <p>Familiarize yourself with this manual; there are great resources in there that you can direct callers to. If necessary, you can also refer them to <a href="http://211.org">211.org</a> or <a href="http://211.ca">211.ca</a>.</p>
+    <p>211 always has someone available 24/7 who can help callers find what they need. This is the place to get help finding shelter or food, or for help dealing with domestic violence.</p>
+  </div>
+</div>
+
+{% endblock %}
