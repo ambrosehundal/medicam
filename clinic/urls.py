@@ -17,4 +17,5 @@ urlpatterns = [
     path('for-organizations/', TemplateView.as_view(template_name='clinic/landing_org.html'), name='landing_org'),
     path('org-request/', views.submit_org, name='submit_org'),
     path('chat/', views.chat, name='chat'),
+    path('room-events/', views.twilio_status_callback, name='twilio_status_callback'),
 ]

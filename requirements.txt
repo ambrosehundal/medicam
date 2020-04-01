@@ -8,6 +8,7 @@ firebase-admin
 gunicorn
 psycopg2-binary
 python-dotenv
+requests
 sentry-sdk
 social-auth-app-django
 twilio

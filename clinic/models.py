@@ -194,3 +194,59 @@ class VolunteerUpdate(models.Model):
 	active = models.BooleanField(default=False)
 	message = models.TextField()
 	timestamp = models.DateTimeField(auto_now_add=True)
+
+EVENT_ROOM_CREATED = "room-created"
+EVENT_ROOM_ENDED = "room-ended"
+EVENT_PARTICIPANT_CONNECTED = "participant-connected"
+EVENT_PARTICIPANT_DISCONNECTED = "participant-disconnected"
+EVENT_TRACK_ADDED = "track-added"
+EVENT_TRACK_REMOVED = "track-removed"
+
+EVENT_CHOICES=(
+	(EVENT_ROOM_CREATED, "room created"),
+	(EVENT_ROOM_ENDED, "room ended"),
+	(EVENT_PARTICIPANT_CONNECTED, "participant connected"),
+	(EVENT_PARTICIPANT_DISCONNECTED, "participant disconnected"),
+	(EVENT_TRACK_ADDED, "track added"),
+	(EVENT_TRACK_REMOVED, "track removed"),
+)
+
+ROOM_IN_PROGRESS = "in-progress"
+ROOM_FAILED = "failed"
+ROOM_COMPLETED = "completed"
+
+ROOM_STATUS_CHOICES=(
+	(ROOM_IN_PROGRESS, "in progress"),
+	(ROOM_FAILED, "failed"),
+	(ROOM_COMPLETED, "completed"),
+)
+
+PARTICIPANT_CONNECTED = "connected"
+PARTICIPANT_DISCONNECTED = "disconnected"
+
+PARTICIPANT_STATUS_CHOICES=(
+	(PARTICIPANT_CONNECTED, "connected"),
+	(PARTICIPANT_DISCONNECTED, "disconnected"),
+)
+
+TRACK_DATA = "data"
+TRACK_AUDIO = "audio"
+TRACK_VIDEO = "video"
+
+TRACK_CHOICES=(
+	(TRACK_DATA, "data"),
+	(TRACK_AUDIO, "audio"),
+	(TRACK_VIDEO, "video"),
+)
+
+class CallEvent(models.Model):
+	received = models.DateTimeField(auto_now_add=True)
+	event = models.CharField(max_length=50, choices=EVENT_CHOICES)
+	room_name = models.CharField(max_length=254)
+	room_status = models.CharField(max_length=20, choices=ROOM_STATUS_CHOICES)
+	room_duration = models.DurationField(blank=True, null=True)
+	timestamp = models.DateTimeField()
+	participant_status = models.CharField(max_length=20, blank=True, null=True, choices=PARTICIPANT_STATUS_CHOICES)
+	participant_id = models.CharField(max_length=254, blank=True, null=True)
+	participant_duration = models.DurationField(blank=True, null=True)
+	track_kind = models.CharField(max_length=20, blank=True, null=True, choices=TRACK_CHOICES)

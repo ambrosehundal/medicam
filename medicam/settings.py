@@ -93,6 +93,10 @@ WSGI_APPLICATION = 'medicam.wsgi.application'
 
 ALLOWED_HOSTS = ['localhost', 'doc19.org', '.platform.doc19.org']
 
+ALLOWED_HOST = os.getenv('ALLOWED_HOST')
+if ALLOWED_HOST:
+    ALLOWED_HOSTS.append(ALLOWED_HOST)
+
 # set SITE_ID to 1 for local development
 SITE_ID = os.getenv('SITE_ID')
 
@@ -177,6 +181,9 @@ ALLOWED_UPLOAD_EXTENSIONS = ['.doc', '.docx', '.odt', '.rtf', '.pdf', '.jpg', '.
 TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_API_KEY = os.getenv('TWILIO_API_KEY')
 TWILIO_API_SECRET = os.getenv('TWILIO_API_SECRET')
+
+# set TWILIO_CALLBACK_URL to force status callbacks to be sent to a particular URL
+TWILIO_CALLBACK_URL = os.getenv('TWILIO_CALLBACK_URL')
 
 
 # Logging

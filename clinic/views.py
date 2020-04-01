@@ -8,25 +8,22 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.dateparse import parse_datetime
 from django.utils.translation import gettext as _
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from clinic.forms import FeedbackForm, OrgRequestForm, VolunteerForm
-from clinic.models import PATIENT_OFFLINE_AFTER
-from clinic.models import (
-	ChatMessage,
-	Disclaimer,
-	Doctor,
-	Language,
-	Patient,
-	SelfCertificationQuestion,
-	VolunteerUpdate,
-)
+from clinic.forms import *
+from clinic.models import *
 
 from firebase_admin import messaging
 from ipware import get_client_ip
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import VideoGrant
+
+import requests
+from requests.auth import HTTPBasicAuth
 
 SIX_MONTHS = 15552000
 ONE_MONTH = 2629800
@@ -130,6 +127,18 @@ def get_twilio_jwt(identity, room):
 	token.add_grant(VideoGrant(room=room))
 	return token.to_jwt().decode('utf-8')
 
+def setup_twilio_room(request, room):
+	callback_url = settings.TWILIO_CALLBACK_URL or request.build_absolute_uri(reverse('twilio_status_callback'))
+	auth = HTTPBasicAuth(settings.TWILIO_API_KEY, settings.TWILIO_API_SECRET)
+	data = {
+		'UniqueName': room,
+		'StatusCallback': callback_url,
+		'StatusCallbackMethod': 'POST',
+		'Type': 'peer-to-peer',
+	}
+	logger.info(data)
+	r = requests.post('https://video.twilio.com/v1/Rooms', auth=auth, data=data)
+
 @transaction.atomic
 def consultation_doctor(request, doctor):
 	doctor.last_seen = datetime.now()
@@ -141,12 +150,14 @@ def consultation_doctor(request, doctor):
 	if not doctor.patient:
 		patient = Patient.objects.order_by('id').filter(site=doctor.site, language__in=doctor.languages.all(), session_started__isnull=True, last_seen__gt=datetime.now()-PATIENT_OFFLINE_AFTER).first()
 		if patient:
+			room = str(patient.uuid)
 			patient.doctor = doctor
 			patient.session_started = datetime.now()
-			patient.twilio_jwt = get_twilio_jwt(identity=str(patient.uuid), room=str(patient.uuid))
+			patient.twilio_jwt = get_twilio_jwt(identity=str(patient.uuid), room=room)
 			patient.save()
-			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.id), room=str(patient.uuid))
+			doctor.twilio_jwt = get_twilio_jwt(identity=str(doctor.id), room=room)
 			doctor.save()
+			setup_twilio_room(request, room)
 			return redirect('consultation')
 		else:
 			return render(request, 'clinic/waiting_doctor.html')
@@ -262,7 +273,6 @@ def finish(request):
 		else:
 			return render(request, 'clinic/finish.html', {'form': form})
 
-
 	return response
 
 @require_http_methods(['GET', 'POST'])
@@ -319,3 +329,27 @@ def submit_org(request):
 	else:
 		form = OrgRequestForm()
 	return render(request, 'clinic/submit_org.html', {'form': form})
+
+@csrf_exempt
+def twilio_status_callback(request):
+	e = CallEvent(
+		room_name=request.POST.get('RoomName'),
+		room_status=request.POST.get('RoomStatus'),
+		event=request.POST.get('StatusCallbackEvent'),
+		timestamp=parse_datetime(request.POST.get('Timestamp')).replace(tzinfo=None),
+		participant_status=request.POST.get('ParticipantStatus'),
+		participant_duration=request.POST.get('ParticipantDuration'),
+		participant_id=request.POST.get('ParticipantIdentity'),
+		track_kind=request.POST.get('TrackKind'),
+	)
+
+	room_duration = request.POST.get('RoomDuration')
+	if room_duration:
+		e.room_duration = timedelta(seconds=int(room_duration))
+
+	participant_duration = request.POST.get('ParticipantDuration')
+	if participant_duration:
+		e.participant_duration = timedelta(seconds=int(participant_duration))
+
+	e.save()
+	return HttpResponse()
