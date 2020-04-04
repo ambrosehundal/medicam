@@ -4,43 +4,43 @@
 {% block title %}{% trans "In session" %}{% endblock %}
 
 {% block head %}
-    <script src="//media.twiliocdn.com/sdk/js/video/releases/2.0.0/twilio-video.min.js"></script>
-    <script src="{% static 'js/video.js' %}"></script>
-    <script src="{% static 'js/chat.js' %}"></script>
+  <script src="//media.twiliocdn.com/sdk/js/video/releases/2.0.0/twilio-video.min.js"></script>
+  <script src="{% static 'js/video.js' %}"></script>
+  <script src="{% static 'js/chat.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
-    <div class="container session {{ user_type }}">
-        <div class="row top">
-            <h2>{{ request.site.name }}</h2>
-        </div>
-
-        <div class="row">
-            <div class="u-pull-right">
-                <form action="{% url 'finish' %}" method="post">
-                    {% csrf_token %}
-                    {% if user_type == 'doctor' %}
-                        <input class="button" type="submit" value="{% trans "Next Call" %}">
-                        <input class="button" type="submit" value="{% trans "Stop Consulting" %}" name="stop_consulting">
-                    {% elif user_type == 'patient' %}
-                        <input class="button" type="submit" value="{% trans "End Session" %}" name="end_session">
-                    {% endif %}
-                </form>
-            </div>
-            {% if user_type == 'patient' %}
-                <span>{% trans "In session with" %} <b>{{ doctor.name }}</b> &bull;</span>
-            {% endif %}
-            <span id="connection-status">{% trans "Connecting" %}...</span>
-        </div>
-
-        {% include 'clinic/session_ui.html' %}
+  <div class="container session {{ user_type }}">
+    <div class="row top">
+      <h2>{{ request.site.name }}</h2>
     </div>
 
-    {{ video_data|json_script:'video-data' }}
-    <script>
-     var data = JSON.parse(document.getElementById('video-data').textContent);
-     initVideo(data.token, data.room, data.enable_local_video, data.user_type);
-     initChat();
-    </script>
+    <div class="row">
+      <div class="u-pull-right">
+        <form action="{% url 'finish' %}" method="post">
+          {% csrf_token %}
+          {% if user_type == 'doctor' %}
+            <input class="button" type="submit" value="{% trans "Next Call" %}">
+            <input class="button" type="submit" value="{% trans "Stop Consulting" %}" name="stop_consulting">
+          {% elif user_type == 'patient' %}
+            <input class="button" type="submit" value="{% trans "End Session" %}" name="end_session">
+          {% endif %}
+        </form>
+      </div>
+      {% if user_type == 'patient' %}
+        <span>{% trans "In session with" %} <b>{{ doctor.name }}</b> &bull;</span>
+      {% endif %}
+      <span id="connection-status">{% trans "Connecting" %}...</span>
+    </div>
+
+    {% include 'clinic/session_ui.html' %}
+  </div>
+
+  {{ video_data|json_script:'video-data' }}
+  <script>
+    var data = JSON.parse(document.getElementById('video-data').textContent);
+    initVideo(data.token, data.room, data.enable_local_video, data.user_type);
+    initChat();
+  </script>
 {% endblock %}

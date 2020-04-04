@@ -10,7 +10,7 @@
 
 <div class="container disclaimer">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+    {% include 'clinic/site_name.html' %}
     {% if disclaimer %}
       {{ disclaimer.html|safe }}
     {% else %}

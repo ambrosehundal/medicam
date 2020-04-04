@@ -2,9 +2,31 @@ a {
 	color: #0692bd;
 }
 
+h2 {
+	font-size: 2.3em;
+}
+
+@media (max-width: 500px) {
+	h2 {
+		font-size: 1.8em;
+	}
+}
+
+@media (max-width: 350px) {
+	h2 {
+		font-size: 1.6em;
+	}
+}
+
 h2 a {
 	text-decoration: none;
 	color: black;
+}
+
+h2 img {
+	height: 55px;
+	vertical-align: middle;
+	margin-right: 5px;
 }
 
 @media (min-width: 500px) {
@@ -183,12 +205,12 @@ ul.errorlist li {
 	margin-top: 20px;
 }
 
-.intro .row.top img {
+.intro .row.top img.u-pull-right {
 	margin: 0 0 20px 20px;
 }
 
 @media (min-width: 500px) {
-	.intro .row.top img {
+	.intro .row.top img.u-pull-right {
 		width: 300px;
 	}
 

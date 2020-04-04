@@ -7,7 +7,7 @@
 
 <div class="container disclaimer">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+    {% include 'clinic/site_name.html' %}
     <h4>{% trans "Privacy Policy" %}</h4>
     <div>
       <div>Your Information. Your Rights. Our Responsibilities.</div>

@@ -1,0 +1,10 @@
+{% load static %}
+
+<h2>
+  <a href="{% url 'index' %}">
+    {% if request.site.id == 1 %}
+      <img src="{% static 'images/logo.png' %}">
+    {% endif %}
+    {{ request.site.name }}
+  </a>
+</h2>

@@ -9,7 +9,7 @@
 
 <div class="container submit-org">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+    {% include 'clinic/site_name.html' %}
   </div>
 
   {% if form.is_valid %}

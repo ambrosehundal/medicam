@@ -7,7 +7,7 @@
 
 <div class="container faq">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+    {% include 'clinic/site_name.html' %}
     <h4>{% trans "Frequently asked questions about COVID-19" %}</h4>
   </div>
 

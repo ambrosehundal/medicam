@@ -45,7 +45,7 @@
 
 <div class="container volunteer">
   <div class="row top">
-    <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+    {% include 'clinic/site_name.html' %}
     <h4>{% trans "Volunteer for consultations" %}</h4>
     <p>{% trans "Please complete this form." %}</p>
     <p>

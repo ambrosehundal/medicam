@@ -7,7 +7,7 @@
 
   <div class="row top">
     <div class="nine columns">
-      <h2><a href="{% url 'index' %}">{{ request.site.name }}</a></h2>
+      {% include 'clinic/site_name.html' %}
     </div>
     <div class="three columns language">
       <form action="{% url 'set_language' %}" method="post">
