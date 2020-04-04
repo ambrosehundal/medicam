@@ -13,7 +13,7 @@ class Command(BaseCommand):
 		try:
 			summary = patient.callsummary
 		except CallSummary.DoesNotExist:
-			summary = CallSummary(patient=patient)
+			summary = CallSummary(site=patient.site, patient=patient)
 
 		first_event = None
 

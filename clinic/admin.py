@@ -106,6 +106,12 @@ class PatientAdmin(SiteAdmin):
 class CallSummaryAdmin(SiteAdmin):
 	list_display=('patient', 'patient_connected', 'patient_audio_start', 'patient_video_start', 'doctor_connected', 'doctor_audio_start', 'doctor_video_start', 'duration', 'successful')
 
+	def get_list_filter(self, request):
+		list_filter=()
+		if request.user.is_superuser:
+			list_filter += ('site',)
+		return list_filter
+
 	def has_add_permission(self, request, obj=None):
 		return False
 

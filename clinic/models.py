@@ -261,6 +261,7 @@ class CallEvent(models.Model):
 SUCCESSFUL_CALL_DURATION=timedelta(seconds=30)
 
 class CallSummary(models.Model):
+	site = models.ForeignKey(Site, on_delete=models.CASCADE)
 	patient = models.OneToOneField(Patient, on_delete=models.PROTECT)
 	patient_connected = models.DurationField(blank=True, null=True, verbose_name=_("caller connected"))
 	patient_audio_start = models.DurationField(blank=True, null=True, verbose_name=_("caller video started"))
