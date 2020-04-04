@@ -84,6 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'clinic.context_processors.sentry_config',
             ],
         },
     },
@@ -245,9 +246,6 @@ TEST_FCM_TOKEN = os.getenv('TEST_FCM_TOKEN')
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-if DEBUG not in ['1', 1, 'true', 'True', True]:
-    sentry_sdk.init(
-        dsn="https://b044df58ab5d4c94b761f0550c97c6a1@sentry.io/5178154",
-        integrations=[DjangoIntegration()],
-        send_default_pii=False
-    )
+SENTRY_DSN = os.getenv('SENTRY_DSN')
+if SENTRY_DSN:
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], send_default_pii=False)

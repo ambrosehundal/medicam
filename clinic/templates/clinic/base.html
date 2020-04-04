@@ -17,12 +17,15 @@
   <link rel="stylesheet" href="{% static "css/clinic.css" %}">
 
   <link rel="icon" type="image/x-icon" href="{% static "images/favicon.ico" %}">
-
-  <script
-    src="https://browser.sentry-cdn.com/5.15.2/bundle.min.js"
-    integrity="sha384-HA4Glk4hAwUFBIu+OfNR4bvn6vGCxT134gRiQce9rwp2YfxcuHHG8nG7qkooJwFt"
-    crossorigin="anonymous"></script>
-  <script>Sentry.init({ dsn: 'https://b044df58ab5d4c94b761f0550c97c6a1@sentry.io/5178154' });</script>
+  
+  {% if SENTRY_CONFIG %}
+    <script
+      src="https://browser.sentry-cdn.com/5.15.2/bundle.min.js"
+      integrity="sha384-HA4Glk4hAwUFBIu+OfNR4bvn6vGCxT134gRiQce9rwp2YfxcuHHG8nG7qkooJwFt"
+      crossorigin="anonymous"></script>
+    {{ SENTRY_CONFIG|json_script:'sentry-config' }}
+    <script>Sentry.init(JSON.parse(document.getElementById('sentry-config').textContext));</script>
+  {% endif %}
 
   {% block head %}{% endblock %}
 </head>

@@ -87,7 +87,6 @@ class DisclaimerAdmin(SiteAdmin):
 
 class PatientAdmin(SiteAdmin):
 	list_display=('id', 'language', 'doctor', 'session_started', 'wait_duration', 'online')
-	readonly_fields=('site', 'language', 'doctor', 'online', 'last_seen', 'session_started', 'session_ended', 'wait_duration', 'enable_video', 'text_only', 'feedback_response', 'feedback_text', 'ip_address')
 
 	def get_list_filter(self, request):
 		list_filter=('language', 'feedback_response')
@@ -98,6 +97,25 @@ class PatientAdmin(SiteAdmin):
 	def has_add_permission(self, request, obj=None):
 		return False
 
+	def has_change_permission(self, request, obj=None):
+		return False
+
+	def has_delete_permission(self, request, obj=None):
+		return False
+
+class CallSummaryAdmin(SiteAdmin):
+	list_display=('patient', 'patient_connected', 'patient_audio_start', 'patient_video_start', 'doctor_connected', 'doctor_audio_start', 'doctor_video_start', 'duration', 'successful')
+
+	def has_add_permission(self, request, obj=None):
+		return False
+
+	def has_change_permission(self, request, obj=None):
+		return False
+
+	def has_delete_permission(self, request, obj=None):
+		return False
+
+admin.site.register(CallSummary, CallSummaryAdmin)
 admin.site.register(Disclaimer, DisclaimerAdmin)
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Language)

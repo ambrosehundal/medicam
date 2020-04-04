@@ -33,7 +33,7 @@ class Language(models.Model):
 class SelfCertificationQuestion(models.Model):
 	sort_order = models.PositiveIntegerField(default=0)
 	text = models.TextField()
-	language = models.ForeignKey(Language, models.PROTECT, to_field='ietf_tag', default='en')
+	language = models.ForeignKey(Language, on_delete=models.PROTECT, to_field='ietf_tag', default='en')
 
 	class Meta:
 		ordering = ('sort_order',)
@@ -134,8 +134,8 @@ FEEDBACK_CHOICES=(
 PATIENT_OFFLINE_AFTER=timedelta(seconds=25)
 
 class Patient(Participant):
-	language = models.ForeignKey(Language, models.PROTECT)
-	doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
+	language = models.ForeignKey(Language, on_delete=models.PROTECT)
+	doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, blank=True, null=True)
 	session_started = models.DateTimeField(blank=True, null=True)
 	session_ended = models.DateTimeField(blank=True, null=True)
 	notes = models.TextField(blank=True, editable=False)
@@ -167,17 +167,21 @@ class Patient(Participant):
 			d = datetime.now() - self.created
 		return d - timedelta(microseconds=d.microseconds)
 
+	@property
+	def call_events(self):
+		return CallEvent.objects.filter(room_name=str(self.uuid))
+
 class Report(models.Model):
-	by_doctor = models.ForeignKey(Doctor, models.PROTECT, blank=True, null=True)
-	by_patient = models.ForeignKey(Patient, models.PROTECT, blank=True, null=True)
-	against_patient = models.ForeignKey(Patient, models.PROTECT, blank=True, null=True, related_name='reported_by')
+	by_doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, blank=True, null=True)
+	by_patient = models.ForeignKey(Patient, on_delete=models.PROTECT, blank=True, null=True)
+	against_patient = models.ForeignKey(Patient, on_delete=models.PROTECT, blank=True, null=True, related_name='reported_by')
 	reason = models.TextField(blank=True)
 	timestamp = models.DateTimeField(auto_now_add=True)
 
 class ChatMessage(models.Model):
 	uuid = models.UUIDField(unique=True, editable=False)
-	doctor = models.ForeignKey(Doctor, models.CASCADE, blank=True, null=True, to_field='uuid')
-	patient = models.ForeignKey(Patient, models.CASCADE, blank=True, null=True, to_field='uuid')
+	doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, blank=True, null=True, to_field='uuid')
+	patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True, to_field='uuid')
 	text = models.TextField()
 	sent = models.DateTimeField(auto_now_add=True)
 	read = models.DateTimeField(blank=True, null=True)
@@ -242,7 +246,7 @@ TRACK_CHOICES=(
 class CallEvent(models.Model):
 	received = models.DateTimeField(auto_now_add=True)
 	event = models.CharField(max_length=50, choices=EVENT_CHOICES)
-	room_name = models.CharField(max_length=254)
+	room_name = models.CharField(max_length=254, db_index=True)
 	room_status = models.CharField(max_length=20, choices=ROOM_STATUS_CHOICES)
 	room_duration = models.DurationField(blank=True, null=True)
 	timestamp = models.DateTimeField()
@@ -250,3 +254,32 @@ class CallEvent(models.Model):
 	participant_id = models.CharField(max_length=254, blank=True, null=True)
 	participant_duration = models.DurationField(blank=True, null=True)
 	track_kind = models.CharField(max_length=20, blank=True, null=True, choices=TRACK_CHOICES)
+
+	def __str__(self):
+		return "{} {} @ {}".format(self.room_name, self.event, self.timestamp)
+
+SUCCESSFUL_CALL_DURATION=timedelta(seconds=30)
+
+class CallSummary(models.Model):
+	patient = models.OneToOneField(Patient, on_delete=models.PROTECT)
+	patient_connected = models.DurationField(blank=True, null=True, verbose_name=_("caller connected"))
+	patient_audio_start = models.DurationField(blank=True, null=True, verbose_name=_("caller video started"))
+	patient_video_start = models.DurationField(blank=True, null=True, verbose_name=_("caller audio started"))
+	doctor_connected = models.DurationField(blank=True, null=True, verbose_name=_("provider connected"))
+	doctor_audio_start = models.DurationField(blank=True, null=True, verbose_name=_("provider video started"))
+	doctor_video_start = models.DurationField(blank=True, null=True, verbose_name=_("provider audio started"))
+	duration = models.DurationField(blank=True, null=True)
+
+	class Meta:
+		verbose_name_plural = _("call summaries")
+
+	def __str__(self):
+		return str(self.patient)
+
+	@property
+	def successful(self):
+		return bool(self.patient_audio_start
+			and (self.patient_video_start or not self.enable_video)
+			and self.doctor_audio_start
+			and self.doctor_video_start
+			and self.duration > SUCCESSFUL_CALL_DURATION)
