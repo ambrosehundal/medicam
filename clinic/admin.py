@@ -25,7 +25,7 @@ class DoctorAdmin(SiteAdmin):
 
 	def get_languages(self, obj):
 		return ", ".join([l.name for l in obj.languages.all()])
-	get_languages.short_description = "Languages"
+	get_languages.short_description = _("languages")
 
 	def push_token(self, obj):
 		return bool(obj.fcm_token)
@@ -35,7 +35,7 @@ class DoctorAdmin(SiteAdmin):
 			return reverse('consultation') + '?provider_id=' + str(obj.uuid)
 		else:
 			return _("(will be generated when provider is added)")
-	access_url.short_description = "Access URL"
+	access_url.short_description = _("access URL")
 
 	def get_list_filter(self, request):
 		list_filter = ('verified', 'languages', 'provider_type')
@@ -49,26 +49,29 @@ class DoctorAdmin(SiteAdmin):
 		else:
 			return ()
 
+	def send_approval_mail(self, request, obj):
+		context = {
+			'provider_name': obj.name,
+			'provider_access_url': f'https://{request.get_host()}{self.access_url(obj)}'
+		}
+		msg_plain = render_to_string('clinic/provider_approval_email.txt', context)
+		msg_html = render_to_string('clinic/provider_approval_email.html', context)
+		send_mail(
+			"Welcome to doc19.org!",
+			msg_plain,
+			"doc19.org team <contact@doc19.org>",
+			[obj.email],
+			html_message=msg_html
+		)
+
 	def save_model(self, request, obj, form, change):
 		if not request.user.is_superuser and not hasattr(obj, 'site'):
 			obj.site = get_current_site(request)
 
-		if 'verified' in form.changed_data and obj.verified is True:
+		if 'verified' in form.changed_data and obj.verified is True and obj.site.id == 1:
 			if obj.email:
 				try:
-					context = {
-						'provider_name': obj.name,
-						'provider_access_url': f'https://{request.get_host()}{self.access_url(obj)}'
-					}
-					msg_plain = render_to_string('clinic/provider_approval_email.txt', context)
-					msg_html = render_to_string('clinic/provider_approval_email.html', context)
-					send_mail(
-						'Welcome to doc19.org!',
-						msg_plain,
-						'doc19.org team <contact@doc19.org>',
-						[obj.email],
-						html_message=msg_html
-					)
+					self.send_approval_mail(request, obj)
 					messages.success(request, f"An approval email has been sent to {obj.email}")
 				except SMTPException as err:
 					logger.info(err)
@@ -85,8 +88,20 @@ class DisclaimerAdmin(SiteAdmin):
 		else:
 			return ()
 
+class CallSummaryInline(admin.StackedInline):
+	model = CallSummary
+	verbose_name_plural = _("call details")
+	exclude = ('site',)
+
 class PatientAdmin(SiteAdmin):
-	list_display=('id', 'language', 'doctor', 'session_started', 'wait_duration', 'online')
+	inlines = [CallSummaryInline]
+	list_display=('id', 'language', 'doctor', 'session_started', 'wait_duration', 'call_duration', 'call_success')
+
+	def call_duration(self, obj):
+		return obj.callsummary.duration
+
+	def call_success(self, obj):
+		return obj.callsummary.successful
 
 	def get_list_filter(self, request):
 		list_filter=('language', 'feedback_response')
@@ -103,25 +118,6 @@ class PatientAdmin(SiteAdmin):
 	def has_delete_permission(self, request, obj=None):
 		return False
 
-class CallSummaryAdmin(SiteAdmin):
-	list_display=('patient', 'first_event', 'duration', 'successful')
-
-	def get_list_filter(self, request):
-		list_filter=()
-		if request.user.is_superuser:
-			list_filter += ('site',)
-		return list_filter
-
-	def has_add_permission(self, request, obj=None):
-		return False
-
-	def has_change_permission(self, request, obj=None):
-		return False
-
-	def has_delete_permission(self, request, obj=None):
-		return False
-
-admin.site.register(CallSummary, CallSummaryAdmin)
 admin.site.register(Disclaimer, DisclaimerAdmin)
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Language)

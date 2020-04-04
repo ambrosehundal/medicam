@@ -266,12 +266,12 @@ class CallSummary(models.Model):
 	created = models.DateTimeField(auto_now_add=True, verbose_name=_("summary created"))
 	last_updated = models.DateTimeField(auto_now=True, verbose_name=_("summary last updated"))
 	first_event = models.DateTimeField()
-	patient_connected = models.DurationField(blank=True, null=True, verbose_name=_("caller connected"))
-	patient_audio_start = models.DurationField(blank=True, null=True, verbose_name=_("caller video started"))
-	patient_video_start = models.DurationField(blank=True, null=True, verbose_name=_("caller audio started"))
 	doctor_connected = models.DurationField(blank=True, null=True, verbose_name=_("provider connected"))
 	doctor_audio_start = models.DurationField(blank=True, null=True, verbose_name=_("provider video started"))
 	doctor_video_start = models.DurationField(blank=True, null=True, verbose_name=_("provider audio started"))
+	patient_connected = models.DurationField(blank=True, null=True, verbose_name=_("caller connected"))
+	patient_audio_start = models.DurationField(blank=True, null=True, verbose_name=_("caller video started"))
+	patient_video_start = models.DurationField(blank=True, null=True, verbose_name=_("caller audio started"))
 	duration = models.DurationField(blank=True, null=True)
 
 	class Meta:
@@ -282,8 +282,10 @@ class CallSummary(models.Model):
 
 	@property
 	def successful(self):
-		return bool(self.patient_audio_start
+		return bool(
+			self.patient_audio_start
 			and (self.patient_video_start or not self.enable_video)
 			and self.doctor_audio_start
 			and self.doctor_video_start
-			and self.duration > SUCCESSFUL_CALL_DURATION)
+			and self.duration > SUCCESSFUL_CALL_DURATION
+		)
