@@ -41,6 +41,7 @@ class Command(BaseCommand):
 				summary.duration = strip_microseconds(e.timestamp - first_event)
 
 		if first_event:
+			summary.first_event = first_event
 			summary.save()
 			self.stdout.write(self.style.SUCCESS(f"Updated call summary for patient {patient.id}."))
 		else:

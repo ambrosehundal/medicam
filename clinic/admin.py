@@ -104,7 +104,7 @@ class PatientAdmin(SiteAdmin):
 		return False
 
 class CallSummaryAdmin(SiteAdmin):
-	list_display=('patient', 'patient_connected', 'patient_audio_start', 'patient_video_start', 'doctor_connected', 'doctor_audio_start', 'doctor_video_start', 'duration', 'successful')
+	list_display=('patient', 'first_event', 'duration', 'successful')
 
 	def get_list_filter(self, request):
 		list_filter=()
