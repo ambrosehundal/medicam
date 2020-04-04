@@ -24,7 +24,7 @@
       integrity="sha384-HA4Glk4hAwUFBIu+OfNR4bvn6vGCxT134gRiQce9rwp2YfxcuHHG8nG7qkooJwFt"
       crossorigin="anonymous"></script>
     {{ SENTRY_CONFIG|json_script:'sentry-config' }}
-    <script>Sentry.init(JSON.parse(document.getElementById('sentry-config').textContext));</script>
+    <script>Sentry.init(JSON.parse(document.getElementById('sentry-config').textContent));</script>
   {% endif %}
 
   {% block head %}{% endblock %}
