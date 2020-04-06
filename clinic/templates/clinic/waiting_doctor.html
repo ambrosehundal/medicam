@@ -14,7 +14,9 @@
     <h2>{{ request.site.name }}</h2>
     <h4>{% trans "Waiting for someone to request help" %}</h4>
     <p>{% trans "Please leave this page open. It will automatically refresh every 15 seconds." %}</p>
-    <p>{% trans "If you're responding to a call notification, the call may have been answered by another volunteer." %}</p>
+    {% if not waiting_for_track %}
+      <p>{% trans "If you're responding to a call notification, the call may have been answered by another volunteer." %}</p>
+    {% endif %}
   </div>
 </div>
 

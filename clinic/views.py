@@ -136,7 +136,7 @@ def setup_twilio_room(request, room):
 		'StatusCallbackMethod': 'POST',
 		'Type': 'peer-to-peer',
 	}
-	logger.info(data)
+	logger.info("Creating room: %s", data)
 	r = requests.post('https://video.twilio.com/v1/Rooms', auth=auth, data=data)
 
 @transaction.atomic
@@ -164,7 +164,7 @@ def consultation_doctor(request, doctor):
 			return render(request, 'clinic/waiting_doctor.html')
 
 	if settings.WAIT_FOR_TRACK and not doctor.patient.track_added:
-		return render(request, 'clinic/waiting_doctor.html')
+		return render(request, 'clinic/waiting_doctor.html', context={'waiting_for_track': True})
 
 	return render(request, 'clinic/session.html', context={
 		'user_type': 'doctor',
@@ -356,4 +356,4 @@ def twilio_status_callback(request):
 		e.participant_duration = timedelta(seconds=int(participant_duration))
 
 	e.save()
-	return HttpResponse()
+	return HttpResponse(status=200)
