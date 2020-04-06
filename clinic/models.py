@@ -63,6 +63,7 @@ PROVIDER_TYPE_CHOICES = (
 
 class Doctor(Participant):
 	name = models.CharField(max_length=70, verbose_name=_("full name"))
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
 	email = models.EmailField(blank=True, null=True)
 	credentials = models.FileField(upload_to=upload_filename, blank=True, null=True)
 	verified = models.BooleanField(default=False, verbose_name=_("approved"), help_text=_("Allows the provider to receive calls. Approving a provider will trigger an email to be sent to them."))

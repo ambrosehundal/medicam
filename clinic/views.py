@@ -45,7 +45,14 @@ def index(request):
 	if doctor_id:
 		return volunteer_homepage(request)
 	else:
-		return render(request, 'clinic/index.html')
+		doctor = Doctor.objects.get(user=request.user)
+		doctor.save()
+		response = redirect('index')
+		response.set_cookie('doctor_id', doctor.uuid, max_age=SIX_MONTHS)
+		return response
+
+
+	return render(request, 'clinic/index.html')
 
 @primary_site_only
 def volunteer_homepage(request):

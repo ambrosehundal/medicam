@@ -15,6 +15,11 @@
   </div>
 </div>
 <br>
+{% if user.is_authenticated %}
+ <p>Your google account was linked succesfully</p>
+{% else %} 
 <p><a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'consulation' %}">{% trans "Sign in with Google" %}</a></p>
+
+{% endif %}
 
 {% endblock %}

@@ -47,6 +47,8 @@
     </div>
   </div>
 
+  <p><a href="{% url 'social:begin' 'google-oauth2' %}?next={% 'index' %}">{% trans "Sign in with Google" %}</a></p>
+
   <div class="row start-buttons">
     <div class="one-half column start-button patient">
       <a href="{% url 'disclaimer' %}">
