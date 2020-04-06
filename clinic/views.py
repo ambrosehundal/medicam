@@ -148,7 +148,8 @@ def consultation_doctor(request, doctor):
 		return render(request, 'clinic/unverified.html')
 
 	if not doctor.patient:
-		patient = Patient.objects.order_by('id').filter(site=doctor.site, language__in=doctor.languages.all(), session_started__isnull=True, last_seen__gt=datetime.now()-PATIENT_OFFLINE_AFTER).first()
+		queryset = Patient.objects.filter(site=doctor.site, language__in=doctor.languages.all())
+		patient = Patient.get_queue(queryset).first()
 		if patient:
 			room = str(patient.uuid)
 			patient.doctor = doctor
@@ -161,6 +162,9 @@ def consultation_doctor(request, doctor):
 			return redirect('consultation')
 		else:
 			return render(request, 'clinic/waiting_doctor.html')
+
+	if settings.WAIT_FOR_TRACK and not doctor.patient.track_added:
+		return render(request, 'clinic/waiting_doctor.html')
 
 	return render(request, 'clinic/session.html', context={
 		'user_type': 'doctor',

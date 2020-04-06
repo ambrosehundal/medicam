@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
-from django.db.models import ExpressionWrapper, F, IntegerField, Q, TimeField
-from django.db.models.functions import Cast, Extract
+from django.db.models import F, Q
+from django.db.models.functions import Extract
 from django.utils.translation import gettext as _
 
 import os, uuid
@@ -95,7 +95,7 @@ class Doctor(Participant):
 
 	@property
 	def in_session(self):
-		return self.patient_set.filter(session_started__isnull=False, session_ended__isnull=True).count() > 0
+		return self.patient_set.filter(session_started__isnull=False, session_ended__isnull=True).exists()
 
 	@classmethod
 	def notify_filter(self, qs):
@@ -120,7 +120,7 @@ class Doctor(Participant):
 
 	@classmethod
 	def notify_object(self, queryset, frequency):
-		if queryset.filter(last_notified__gt=datetime.now()-frequency).count() == 0:
+		if not queryset.filter(last_notified__gt=datetime.now()-frequency).exists():
 			return self.notify_filter(queryset).order_by('last_notified').first()
 		else:
 			return False
@@ -170,6 +170,15 @@ class Patient(Participant):
 	@property
 	def call_events(self):
 		return CallEvent.objects.filter(room_name=str(self.uuid))
+
+	@property
+	def track_added(self):
+		return self.call_events.filter(event=EVENT_TRACK_ADDED).exists()
+
+	@classmethod
+	def get_queue(self, qs):
+		# must be unmatched and currently online
+		return qs.filter(session_started__isnull=True, last_seen__gt=datetime.now()-PATIENT_OFFLINE_AFTER).order_by('id')
 
 class Report(models.Model):
 	by_doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, blank=True, null=True)

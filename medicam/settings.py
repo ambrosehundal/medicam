@@ -186,6 +186,10 @@ TWILIO_API_SECRET = os.getenv('TWILIO_API_SECRET')
 # set TWILIO_CALLBACK_URL to force status callbacks to be sent to a particular URL
 TWILIO_CALLBACK_URL = os.getenv('TWILIO_CALLBACK_URL')
 
+# enable WAIT_FOR_TRACK to wait for callers to add a track before matching them
+# (this requires Twilio status callbacks)
+WAIT_FOR_TRACK = os.getenv('WAIT_FOR_TRACK', False)
+
 
 # Logging
 
