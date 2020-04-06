@@ -296,5 +296,6 @@ class CallSummary(models.Model):
 			and (self.patient_video_start or not self.enable_video)
 			and self.doctor_audio_start
 			and self.doctor_video_start
+			and self.duration
 			and self.duration > SUCCESSFUL_CALL_DURATION
 		)
