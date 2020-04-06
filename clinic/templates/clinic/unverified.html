@@ -14,5 +14,7 @@
     <p>{% trans "Thank you. We will verify your credentials as soon as possible." %}</p>
   </div>
 </div>
+<br>
+<p><a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'consulation' %}">{% trans "Sign in with Google" %}</a></p>
 
 {% endblock %}
